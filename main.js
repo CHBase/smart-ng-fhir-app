@@ -182,7 +182,7 @@ var AppRoutingModule = /** @class */ (function () {
             imports: [
                 _angular_common__WEBPACK_IMPORTED_MODULE_1__["CommonModule"],
                 _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_3__["BrowserAnimationsModule"],
-                _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(routes, { useHash: true })
+                _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"].forRoot(routes)
             ],
             declarations: [],
             providers: [_misc_auth_guard__WEBPACK_IMPORTED_MODULE_4__["AuthGaurd"]],
@@ -2859,7 +2859,7 @@ var CLIENT_APPS = [
     {
         name: 'CHBase PPE - Sample App - Live Demo',
         uniqueName: 'sampleappdocs',
-        clientId: '6faa0fe6-8eb2-4217-8c4f-0910f7fed0b5',
+        clientId: '7be9756f-1cb2-4c7c-9b8c-b2acc2325994',
         redirectUri: 'https://chbase.github.io/smart-ng-fhir-app/redirect/sampleappdocs',
         launchUrl: 'https://chbase.github.io/smart-ng-fhir-app/launch/sampleappdocs',
         scopes: 'patient/*.*',
