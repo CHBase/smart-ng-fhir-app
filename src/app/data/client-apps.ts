@@ -14,5 +14,17 @@ export const CLIENT_APPS: ClientApp[] = [
         ehrLaunch: true,
         server: 'chbaseppe',
         secret: '5e24b756-9a70-4ea7-a602-150c639280a3'
+    },
+    {
+        name: 'CHBase PPE - Sample App - Live Demo',
+        uniqueName: 'sampleappdocs',
+        clientId: '6faa0fe6-8eb2-4217-8c4f-0910f7fed0b5',
+        redirectUri: 'https://chbase.github.io/smart-ng-fhir-app/redirect/sampleappdocs',
+        launchUrl: 'https://chbase.github.io/smart-ng-fhir-app/launch/sampleappdocs',
+        scopes: 'patient/*.*',
+        standalonePatient: true,
+        ehrLaunch: true,
+        server: 'chbaseppe',
+        secret: 'c55a4f55-c639-4995-8696-d8bbd9c43db7'
     }
 ];
