@@ -1,0 +1,42 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<mat-card class="mat-elevation-z8">
+  <mat-card-title>
+    <div class="row">
+      <span>{{resourceType}} ID: {{id}}</span>
+      <span style="float: right">
+        <button color="warn" mat-raised-button *ngIf="canDelete" (click)="delete()">Delete</button>
+      </span>
+    </div>
+  </mat-card-title>
+  <mat-card-content>
+    <div>
+      <mat-tab-group [selectedIndex]="selectedTabIndex">
+        <mat-tab *ngIf="resource" label="JSON">
+          <ace-editor [(text)]="code" style="height:500px;" [theme]="'eclipse'" [autoUpdateContent]="false"></ace-editor>
+        </mat-tab>
+        <mat-tab *ngIf="resource" label="View">
+          <ngx-json-viewer *ngIf="resource" [json]="resource"></ngx-json-viewer>
+        </mat-tab>
+        <mat-tab *ngIf="resourceRequest || resourceResponse" label="Request-Response">
+          <div class="row">
+            <div class="col-md-6">
+              <h4>Request</h4>
+              <ace-editor [text]="codeResourceRequest" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+            </div>
+            <div class="col-md-6">
+              <h4>Response</h4>
+              <ace-editor [text]="codeResourceResponse" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab *ngIf="error" label="Error">
+          <ace-editor *ngIf="error" [text]="codeError" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" *ngIf="!error && canUpdate && !resourceResponse" (click)="save()">SAVE</button>
+    <button mat-raised-button color="warn" routerLink="/resources/{{resourceType}}">CANCEL</button>
+  </mat-card-actions>
+</mat-card>

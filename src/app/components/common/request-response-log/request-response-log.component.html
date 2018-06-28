@@ -1,0 +1,52 @@
+<div class="min-padding" style="float: right;">
+  <button mat-raised-button color="warn" (click)="clearLogs()">Cleare Logs</button>
+</div>
+<mat-accordion>
+  <mat-expansion-panel expanded>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Request Response Log
+      </mat-panel-title>
+      <mat-panel-description>
+        Log of all the FHIR API requests made by this app.
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div>
+      <div *ngFor="let log of logs">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{log.request.method}} {{log.response.status}} {{log.request.url}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-tab-group>
+                    <mat-tab label="Body">
+                      <ace-editor [text]="log.request.body" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                    </mat-tab>
+                    <mat-tab label="Headers">
+                      <ace-editor [text]="log.request.headers" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                    </mat-tab>
+                  </mat-tab-group>
+                </div>
+                <div class="col-md-6">
+                  <mat-tab-group>
+                    <mat-tab label="Body">
+                      <ace-editor [text]="log.response.data" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                    </mat-tab>
+                    <mat-tab label="Headers">
+                      <ace-editor [text]="log.response.headers" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                    </mat-tab>
+                  </mat-tab-group>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

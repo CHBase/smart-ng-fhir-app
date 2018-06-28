@@ -1,0 +1,19 @@
+.side-nav-container {
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.float-right {
+    float: right;
+}
+
+.card-no-data {
+    min-height: 300px;
+}
+
+.center {
+    margin: auto;
+}

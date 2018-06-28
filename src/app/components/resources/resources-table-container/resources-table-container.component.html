@@ -1,0 +1,46 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<mat-card class="mat-elevation-z8">
+  <mat-card-title>
+    <div class="row">
+      <div class="col-md-2 col-xs-1">
+        <span>{{resourceType}}</span>
+      </div>
+      <div class="col-xs-3 col-md-9">
+      </div>
+      <button mat-raised-button color="primary" routerLink="/resources/{{resourceType}}/new">Add</button>
+    </div>
+  </mat-card-title>
+  <mat-card-content>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Filter
+          </mat-panel-title>
+          <mat-panel-description>
+            Specify the filter as JSON(mongodb-like query syntax)
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="min-padding">
+          Search Parameters Supported
+          <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let param of searchParams" matTooltip="{{param.documentation}}">
+              <h4 mat-line>{{param.name}}</h4>
+              <p mat-line>{{param.type}}</p>
+              <div>{{param.documentation}}</div>
+            </mat-list-item>
+          </mat-list>
+        </div>
+        <ace-editor [(text)]="queryCode" style="height:100px;" [theme]="'eclipse'"></ace-editor>
+        <div class="min-padding">
+          <span class="min-padding">
+            <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+          </span>
+          <button mat-raised-button color="warn" (click)="reset()">Reset</button>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <app-resources-table *ngIf="!error" [bundle]="resources" [resourceType]="resourceType"></app-resources-table>
+  </mat-card-content>
+</mat-card>
+<app-object-viewer *ngIf="error" title="Error" [value]="error" hideView="true"></app-object-viewer>

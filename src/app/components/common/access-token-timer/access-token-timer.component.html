@@ -1,0 +1,9 @@
+<span *ngIf="timeLeft>0">
+  Access Token: {{timeLeft}} s
+</span>
+<span *ngIf="(isLoggedIn$ | async) && (!timeLeft || timeLeft<=0)">
+  Access token has expired.
+</span>
+<span *ngIf="isLoggedIn$ | async" class="min-padding">
+  <button mat-raised-button color="warn" *ngIf="canRefresh" (click)="refreshAccessToken()">Refresh Access Token</button>
+</span>

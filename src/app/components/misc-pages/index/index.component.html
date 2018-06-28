@@ -1,0 +1,42 @@
+<mat-tab-group>
+  <mat-tab label="Standalone - Patient Apps">
+    <mat-card class="mat-elevation-z8">
+      <mat-card-content>
+        <div>
+          <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let app of standalonePatientApps">
+              <button mat-raised-button color="primary" (click)="connect(app.uniqueName);">{{app.name}}</button>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Launch from EHR - Provider Apps">
+    <mat-card class="mat-elevation-z8">
+      <mat-card-content>
+        <div>
+          <mat-card *ngFor="let app of ehrLaunchApps">
+            <mat-card-title>
+              <div>{{app.name}}</div>
+            </mat-card-title>
+            <mat-card-content>
+              <div>
+                <h4>FHIR Server: {{server(app.server).baseUrl}}</h4>
+                <p>Client_Id: {{app.clientId}}</p>
+                <p>Redirect Uri: {{app.redirectUri}}</p>
+                <p>Launch Url: {{app.launchUrl}}</p>
+                <div *ngIf="server(app.server).information && server(app.server).information.ehrLaunch">
+                  <p>Information</p>
+                  <ol>
+                    <li *ngFor="let information of  server(app.server).information.ehrLaunch">{{information}}</li>
+                  </ol>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

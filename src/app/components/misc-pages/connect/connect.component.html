@@ -1,0 +1,84 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-content>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-card class="mat-elevation-z8">
+          <mat-card-title>
+            Client
+          </mat-card-title>
+          <mat-card-content>
+            <p>Name: {{app.name}}</p>
+            <p>Unique Name: {{app.uniqueName}}</p>
+            <p>Client_Id: {{app.clientId}}</p>
+            <p>Redirect Uri: {{app.redirectUri}}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-6">
+        <mat-card class="mat-elevation-z8">
+          <mat-card-title>
+            Server
+          </mat-card-title>
+          <mat-card-content>
+            <p>Name: {{server.name}}</p>
+            <p>Unique Name: {{server.uniqueName}}</p>
+            <p>Base Url: {{server.baseUrl}}</p>
+            <div *ngIf="server.information && server.information.patientStandalone">
+              <p>Information</p>
+              <ol>
+                <li *ngFor="let information of server.information.patientStandalone">{{information}}</li>
+              </ol>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div>
+      <p>Select the Scopes</p>
+      <button mat-line mat-button (click)="toggleAll()">Toggle All</button>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <div class="checkbox" *ngFor="let scope of scopes">
+                  <div class="col-xs-4">
+                    <mat-checkbox name="scopes" value="{{scope.value}}" [(ngModel)]="scope.checked"> {{scope.value}}</mat-checkbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="server.supportsAccessTypes">
+        <p>Access Type</p>
+        <div class="row">
+          <div class="col-xs-12">
+            <mat-radio-group [(ngModel)]="accessType">
+              <div class="col-xs-2">
+                <mat-radio-button value="online_access">Online Access</mat-radio-button>
+              </div>
+              <div class="col-xs-2">
+                <mat-radio-button value="offline_access">Offline Access</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="example-form">
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="Additional Scopes (Comma Seperated)" [(ngModel)]="additionalScopes">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="connect();">CONNECT</button>
+    <button mat-raised-button color="warn" routerLink="/index">CANCEL</button>
+  </mat-card-actions>
+</mat-card>

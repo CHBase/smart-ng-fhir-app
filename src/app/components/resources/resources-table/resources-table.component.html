@@ -1,0 +1,20 @@
+<mat-tab-group>
+  <mat-tab label="LIST">
+    <mat-list *ngIf="bundle">
+      <div *ngFor="let entry of bundle.entry">
+        <div *ngIf="entry.resource.resourceType !== 'OperationOutcome'">
+          <mat-list-item>
+            <p mat-line>ID: {{entry.resource.id}} </p>
+            <button mat-raised-button color="primary" routerLink="/resources/{{entry.resource.resourceType}}/{{entry.resource.id}}">View</button>
+          </mat-list-item>
+        </div>
+      </div>
+    </mat-list>
+    <div *ngIf="bundle && bundle.total == 0">
+      There are no resources of type {{resourceType}}
+    </div>
+  </mat-tab>
+  <mat-tab label="JSON">
+    <ace-editor [text]="codeBundle" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,15 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-title>
+    <div>{{title}}</div>
+  </mat-card-title>
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label="View" *ngIf="!hideView">
+        <ngx-json-viewer *ngIf="value" [json]="value"></ngx-json-viewer>
+      </mat-tab>
+      <mat-tab label="JSON">
+        <ace-editor [text]="codeValue" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

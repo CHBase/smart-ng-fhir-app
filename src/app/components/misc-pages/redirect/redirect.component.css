@@ -1,0 +1,14 @@
+.wrapper {
+    margin: 0px;
+    padding: 0px;
+    border-width: 0px;
+    display: table;
+    width: 100%;
+}
+
+.inner {
+    text-align: center;
+    height: 300px;
+    display: table-cell;
+    vertical-align: middle;
+}

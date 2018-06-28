@@ -1,0 +1,6 @@
+<div mat-dialog-content>
+  <app-object-viewer *ngIf="data" title="Error" [value]="data" hideView="true"></app-object-viewer>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button  color="warn" (click)="close()">Close</button>
+</div>
