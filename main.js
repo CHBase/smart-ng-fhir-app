@@ -214,7 +214,7 @@ module.exports = ".side-nav-container {\r\n    position: absolute;\r\n    top: 6
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n  <mat-toolbar color=\"primary\">\r\n    <button *ngIf=\"isLoggedIn$ | async\" mat-icon-button (click)=\"snav.toggle()\">\r\n      <mat-icon>menu</mat-icon>\r\n    </button>\r\n    <span>Sample FHIR Application using Angular and SMART Javascript Client Library</span>\r\n    <span class=\"spacer\"></span>\r\n    <app-access-token-timer></app-access-token-timer>\r\n    <span class=\"min-padding\">\r\n      <button mat-raised-button (click)=\"requestResponseLog.toggle();\">Request Response Logs</button>\r\n    </span>\r\n    <span class=\"min-padding\" *ngIf=\"isLoggedIn$ | async\">\r\n      <button mat-raised-button color=\"warn\" *ngIf=\"canSwitchPatient\" (click)=\"switchPatient();snav.toggle();\">Switch Patient</button>\r\n    </span>\r\n    <span class=\"min-padding\">\r\n      <button mat-raised-button color=\"warn\" *ngIf=\"isLoggedIn$ | async\" (click)=\"logout();snav.toggle();\">Signout</button>\r\n    </span>\r\n  </mat-toolbar>\r\n  <mat-sidenav-container class=\"side-nav-container\">\r\n    <mat-sidenav #snav mode=\"side\" opened=\"false\">\r\n      <mat-nav-list *ngIf=\"isLoggedIn$ | async\">\r\n        <a routerLink=\"/conformance\" mat-list-item>Conformance</a>\r\n        <a routerLink=\"/state\" mat-list-item>State</a>\r\n        <a routerLink=\"/token\" mat-list-item>Access Token</a>\r\n        <a routerLink=\"/user-profile\" mat-list-item>User Profile</a>\r\n        <app-resources-menu></app-resources-menu>\r\n      </mat-nav-list>\r\n    </mat-sidenav>\r\n    <mat-sidenav #requestResponseLog opened=\"false\" mode=\"side\" position=\"end\">\r\n      <app-request-response-log></app-request-response-log>\r\n    </mat-sidenav>\r\n    <mat-sidenav-content>\r\n      <div>\r\n        <div class=\"container\">\r\n          <router-outlet></router-outlet>\r\n        </div>\r\n      </div>\r\n    </mat-sidenav-content>\r\n  </mat-sidenav-container>\r\n</div>"
+module.exports = "<div>\r\n  <mat-toolbar color=\"primary\">\r\n    <mat-toolbar-row>\r\n      <button *ngIf=\"isLoggedIn$ | async\" mat-icon-button (click)=\"snav.toggle()\">\r\n        <mat-icon>menu</mat-icon>\r\n      </button>\r\n      <span>Sample SMART on FHIR Application</span>\r\n      <span class=\"spacer\"></span>\r\n      <app-access-token-timer></app-access-token-timer>\r\n      <span class=\"min-padding\">\r\n        <button mat-raised-button (click)=\"requestResponseLog.toggle();\">Request Response Logs</button>\r\n      </span>\r\n      <span class=\"min-padding\" *ngIf=\"isLoggedIn$ | async\">\r\n        <button mat-raised-button color=\"warn\" *ngIf=\"canSwitchPatient\" (click)=\"switchPatient();snav.toggle();\">Switch Patient</button>\r\n      </span>\r\n      <span class=\"min-padding\">\r\n        <button mat-raised-button color=\"warn\" *ngIf=\"isLoggedIn$ | async\" (click)=\"logout();snav.toggle();\">Signout</button>\r\n      </span>\r\n    </mat-toolbar-row>\r\n    <mat-toolbar-row *ngIf=\"isLoggedIn$ | async\">\r\n      <h4>Server: {{connectedServer}}</h4>\r\n    </mat-toolbar-row>\r\n  </mat-toolbar>\r\n  <mat-sidenav-container class=\"side-nav-container\">\r\n    <mat-sidenav #snav mode=\"side\" opened=\"false\">\r\n      <mat-nav-list *ngIf=\"isLoggedIn$ | async\">\r\n        <a routerLink=\"/conformance\" mat-list-item>Conformance</a>\r\n        <a routerLink=\"/state\" mat-list-item>State</a>\r\n        <a routerLink=\"/token\" mat-list-item>Access Token</a>\r\n        <a routerLink=\"/user-profile\" mat-list-item>User Profile</a>\r\n        <app-resources-menu></app-resources-menu>\r\n      </mat-nav-list>\r\n    </mat-sidenav>\r\n    <mat-sidenav #requestResponseLog opened=\"false\" mode=\"side\" position=\"end\">\r\n      <app-request-response-log></app-request-response-log>\r\n    </mat-sidenav>\r\n    <mat-sidenav-content>\r\n      <div>\r\n        <div class=\"container\">\r\n          <router-outlet></router-outlet>\r\n        </div>\r\n      </div>\r\n    </mat-sidenav-content>\r\n  </mat-sidenav-container>\r\n</div>"
 
 /***/ }),
 
@@ -290,6 +290,7 @@ var AppComponent = /** @class */ (function () {
                     .subscribe(function (smartClient) {
                     _this._zone.run(function () {
                         _this.canSwitchPatient = smartClient.state.client.scope.indexOf('launch/patient') !== -1;
+                        _this.connectedServer = smartClient.state.server;
                     });
                 });
             }
@@ -658,7 +659,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-card class=\"mat-elevation-z8\">\r\n  <mat-card-title>\r\n    <div>{{title}}</div>\r\n  </mat-card-title>\r\n  <mat-card-content>\r\n    <mat-tab-group>\r\n      <mat-tab label=\"View\" *ngIf=\"!hideView\">\r\n        <ngx-json-viewer *ngIf=\"value\" [json]=\"value\"></ngx-json-viewer>\r\n      </mat-tab>\r\n      <mat-tab label=\"JSON\">\r\n        <ace-editor [text]=\"codeValue\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n      </mat-tab>\r\n    </mat-tab-group>\r\n  </mat-card-content>\r\n</mat-card>"
+module.exports = "<mat-card class=\"mat-elevation-z8\">\r\n  <mat-card-title>\r\n    <div>{{title}}</div>\r\n  </mat-card-title>\r\n  <mat-card-content>\r\n    <mat-tab-group>\r\n      <mat-tab label=\"View\" *ngIf=\"!hideView\">\r\n        <ngx-json-viewer *ngIf=\"value\" [json]=\"value\"></ngx-json-viewer>\r\n      </mat-tab>\r\n      <mat-tab label=\"JSON\">\r\n        <ace-editor mode=\"text\" [text]=\"codeValue\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n      </mat-tab>\r\n    </mat-tab-group>\r\n  </mat-card-content>\r\n</mat-card>"
 
 /***/ }),
 
@@ -748,7 +749,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"min-padding\" style=\"float: right;\">\r\n  <button mat-raised-button color=\"warn\" (click)=\"clearLogs()\">Cleare Logs</button>\r\n</div>\r\n<mat-accordion>\r\n  <mat-expansion-panel expanded>\r\n    <mat-expansion-panel-header>\r\n      <mat-panel-title>\r\n        Request Response Log\r\n      </mat-panel-title>\r\n      <mat-panel-description>\r\n        Log of all the FHIR API requests made by this app.\r\n      </mat-panel-description>\r\n    </mat-expansion-panel-header>\r\n    <div>\r\n      <div *ngFor=\"let log of logs\">\r\n        <mat-accordion>\r\n          <mat-expansion-panel>\r\n            <mat-expansion-panel-header>\r\n              <mat-panel-title>\r\n                {{log.request.method}} {{log.response.status}} {{log.request.url}}\r\n              </mat-panel-title>\r\n            </mat-expansion-panel-header>\r\n            <div>\r\n              <div class=\"row\">\r\n                <div class=\"col-md-6\">\r\n                  <mat-tab-group>\r\n                    <mat-tab label=\"Body\">\r\n                      <ace-editor [text]=\"log.request.body\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                    <mat-tab label=\"Headers\">\r\n                      <ace-editor [text]=\"log.request.headers\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                  </mat-tab-group>\r\n                </div>\r\n                <div class=\"col-md-6\">\r\n                  <mat-tab-group>\r\n                    <mat-tab label=\"Body\">\r\n                      <ace-editor [text]=\"log.response.data\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                    <mat-tab label=\"Headers\">\r\n                      <ace-editor [text]=\"log.response.headers\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                  </mat-tab-group>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </mat-expansion-panel>\r\n        </mat-accordion>\r\n      </div>\r\n    </div>\r\n  </mat-expansion-panel>\r\n</mat-accordion>"
+module.exports = "<div class=\"min-padding\" style=\"float: right;\">\r\n  <button mat-raised-button color=\"warn\" (click)=\"clearLogs()\">Cleare Logs</button>\r\n</div>\r\n<mat-accordion>\r\n  <mat-expansion-panel expanded>\r\n    <mat-expansion-panel-header>\r\n      <mat-panel-title>\r\n        Request Response Log\r\n      </mat-panel-title>\r\n      <mat-panel-description>\r\n        Log of all the FHIR API requests made by this app.\r\n      </mat-panel-description>\r\n    </mat-expansion-panel-header>\r\n    <div>\r\n      <div *ngFor=\"let log of logs\">\r\n        <mat-accordion>\r\n          <mat-expansion-panel>\r\n            <mat-expansion-panel-header>\r\n              <mat-panel-title>\r\n                {{log.request.method}} {{log.response.status}} {{log.request.url}}\r\n              </mat-panel-title>\r\n            </mat-expansion-panel-header>\r\n            <div>\r\n              <div class=\"row\">\r\n                <div class=\"col-md-6\">\r\n                  <mat-tab-group>\r\n                    <mat-tab label=\"Body\">\r\n                      <ace-editor mode=\"text\" [text]=\"log.request.body\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                    <mat-tab label=\"Headers\">\r\n                      <ace-editor mode=\"text\" [text]=\"log.request.headers\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                  </mat-tab-group>\r\n                </div>\r\n                <div class=\"col-md-6\">\r\n                  <mat-tab-group>\r\n                    <mat-tab label=\"Body\">\r\n                      <ace-editor mode=\"text\" [text]=\"log.response.data\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                    <mat-tab label=\"Headers\">\r\n                      <ace-editor mode=\"text\" [text]=\"log.response.headers\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n                    </mat-tab>\r\n                  </mat-tab-group>\r\n                </div>\r\n              </div>\r\n            </div>\r\n          </mat-expansion-panel>\r\n        </mat-accordion>\r\n      </div>\r\n    </div>\r\n  </mat-expansion-panel>\r\n</mat-accordion>"
 
 /***/ }),
 
@@ -2051,7 +2052,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-progress-bar *ngIf=\"isLoading\" mode=\"indeterminate\"></mat-progress-bar>\r\n<mat-card class=\"mat-elevation-z8\">\r\n  <mat-card-title>\r\n    <div class=\"row\">\r\n      <span>{{resourceType}} ID: {{id}}</span>\r\n      <span style=\"float: right\">\r\n        <button color=\"warn\" mat-raised-button *ngIf=\"canDelete\" (click)=\"delete()\">Delete</button>\r\n      </span>\r\n    </div>\r\n  </mat-card-title>\r\n  <mat-card-content>\r\n    <div>\r\n      <mat-tab-group [selectedIndex]=\"selectedTabIndex\">\r\n        <mat-tab *ngIf=\"resource\" label=\"JSON\">\r\n          <ace-editor [(text)]=\"code\" style=\"height:500px;\" [theme]=\"'eclipse'\" [autoUpdateContent]=\"false\"></ace-editor>\r\n        </mat-tab>\r\n        <mat-tab *ngIf=\"resource\" label=\"View\">\r\n          <ngx-json-viewer *ngIf=\"resource\" [json]=\"resource\"></ngx-json-viewer>\r\n        </mat-tab>\r\n        <mat-tab *ngIf=\"resourceRequest || resourceResponse\" label=\"Request-Response\">\r\n          <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n              <h4>Request</h4>\r\n              <ace-editor [text]=\"codeResourceRequest\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n              <h4>Response</h4>\r\n              <ace-editor [text]=\"codeResourceResponse\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n            </div>\r\n          </div>\r\n        </mat-tab>\r\n        <mat-tab *ngIf=\"error\" label=\"Error\">\r\n          <ace-editor *ngIf=\"error\" [text]=\"codeError\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n        </mat-tab>\r\n      </mat-tab-group>\r\n    </div>\r\n  </mat-card-content>\r\n  <mat-card-actions>\r\n    <button mat-raised-button color=\"primary\" *ngIf=\"!error && canUpdate && !resourceResponse\" (click)=\"save()\">SAVE</button>\r\n    <button mat-raised-button color=\"warn\" routerLink=\"/resources/{{resourceType}}\">CANCEL</button>\r\n  </mat-card-actions>\r\n</mat-card>"
+module.exports = "<mat-progress-bar *ngIf=\"isLoading\" mode=\"indeterminate\"></mat-progress-bar>\r\n<mat-card class=\"mat-elevation-z8\">\r\n  <mat-card-title>\r\n    <div class=\"row\">\r\n      <span>{{resourceType}} ID: {{id}}</span>\r\n      <span style=\"float: right\">\r\n        <button color=\"warn\" mat-raised-button *ngIf=\"canDelete\" (click)=\"delete()\">Delete</button>\r\n      </span>\r\n    </div>\r\n  </mat-card-title>\r\n  <mat-card-content>\r\n    <div *ngIf=\"!resourceResponse\">\r\n      <mat-form-field>\r\n        <mat-select placeholder=\"Samples\" (selectionChange)=\"sampleSelected($event)\">\r\n          <mat-option *ngFor=\"let sample of samples\" [value]=\"sample.id\">\r\n            {{sample.name}}\r\n          </mat-option>\r\n        </mat-select>\r\n      </mat-form-field>\r\n    </div>\r\n    <div>\r\n      <mat-tab-group [selectedIndex]=\"selectedTabIndex\">\r\n        <mat-tab *ngIf=\"resource\" label=\"JSON\">\r\n          <ace-editor mode=\"text\" [(text)]=\"code\" style=\"height:500px;\" [theme]=\"'eclipse'\" [autoUpdateContent]=\"true\"></ace-editor>\r\n        </mat-tab>\r\n        <mat-tab *ngIf=\"resource\" label=\"View\">\r\n          <ngx-json-viewer *ngIf=\"resource\" [json]=\"resource\"></ngx-json-viewer>\r\n        </mat-tab>\r\n        <mat-tab *ngIf=\"resourceRequest || resourceResponse\" label=\"Request-Response\">\r\n          <div class=\"row\">\r\n            <div class=\"col-md-6\">\r\n              <h4>Request</h4>\r\n              <ace-editor mode=\"text\" [text]=\"codeResourceRequest\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n            </div>\r\n            <div class=\"col-md-6\">\r\n              <h4>Response</h4>\r\n              <ace-editor mode=\"text\" [text]=\"codeResourceResponse\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n            </div>\r\n          </div>\r\n        </mat-tab>\r\n        <mat-tab *ngIf=\"error\" label=\"Error\">\r\n          <ace-editor mode=\"text\" *ngIf=\"error\" [text]=\"codeError\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n        </mat-tab>\r\n      </mat-tab-group>\r\n    </div>\r\n  </mat-card-content>\r\n  <mat-card-actions>\r\n    <button mat-raised-button color=\"primary\" *ngIf=\"((!error && canUpdate && !resourceResponse) || (error && id==='new')) && !invalidJson\"\r\n      (click)=\"save()\">SAVE</button>\r\n    <button mat-raised-button color=\"warn\" routerLink=\"/resources/{{resourceType}}\">CANCEL</button>\r\n  </mat-card-actions>\r\n</mat-card>"
 
 /***/ }),
 
@@ -2070,6 +2071,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_helper_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/helper.service */ "./src/app/services/helper.service.ts");
 /* harmony import */ var _services_smart_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../services/smart.service */ "./src/app/services/smart.service.ts");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _services_data_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../services/data.service */ "./src/app/services/data.service.ts");
+/* harmony import */ var _angular_material__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/material */ "./node_modules/@angular/material/esm5/material.es5.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2084,6 +2087,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 /**
  * Component used to create/update a particular FHIR resource
  * FHIR resource fetched based on the resource type and the id.
@@ -2091,12 +2096,14 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
  * Can see and compare the request and response resource objects.
  */
 var EditResourceComponent = /** @class */ (function () {
-    function EditResourceComponent(_zone, _route, _helperService, _smartService) {
+    function EditResourceComponent(_zone, _route, _helperService, _smartService, _dataService, _snackBar) {
         var _this = this;
         this._zone = _zone;
         this._route = _route;
         this._helperService = _helperService;
         this._smartService = _smartService;
+        this._dataService = _dataService;
+        this._snackBar = _snackBar;
         /**
          * Index of the Tab selected
          */
@@ -2116,6 +2123,8 @@ var EditResourceComponent = /** @class */ (function () {
                     _this.resourceResponse = response;
                 }
                 _this.selectedTabIndex = 2;
+                _this.error = null;
+                _this.openSnackBar('SUCCESS', 'OK');
             });
         };
         /**
@@ -2126,6 +2135,7 @@ var EditResourceComponent = /** @class */ (function () {
                 _this.isLoading = false;
                 _this.error = error;
                 _this.selectedTabIndex = 3;
+                _this.openSnackBar('ERROR OCCURED', 'OK');
             });
         };
     }
@@ -2147,6 +2157,9 @@ var EditResourceComponent = /** @class */ (function () {
             else {
                 _this._setResource(smartClient);
             }
+        });
+        this._dataService.getData(this.resourceType).subscribe(function (samples) {
+            _this.samples = samples;
         });
     };
     /**
@@ -2181,6 +2194,7 @@ var EditResourceComponent = /** @class */ (function () {
      */
     EditResourceComponent.prototype.save = function () {
         var _this = this;
+        this.error = null;
         this._smartService.getClient()
             .takeUntil(this._unsubscribe)
             .subscribe(function (smartClient) {
@@ -2197,6 +2211,11 @@ var EditResourceComponent = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Method called by the delete button.
+     * The resource object in the editor is passed on to the FHIR server
+     * The SMART on FHIR JS Client delete api is used.
+     */
     EditResourceComponent.prototype.delete = function () {
         var _this = this;
         this._smartService.getClient()
@@ -2250,11 +2269,15 @@ var EditResourceComponent = /** @class */ (function () {
          * Setter method used by the Ace Editor to set the value of the resource object
          */
         set: function (v) {
+            var _this = this;
             try {
                 this.resource = JSON.parse(v);
+                this.invalidJson = false;
             }
             catch (e) {
-                console.log('error occored while you were typing the JSON');
+                this._zone.run(function () {
+                    _this.invalidJson = true;
+                });
             }
         },
         enumerable: true,
@@ -2290,6 +2313,25 @@ var EditResourceComponent = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    /**
+     * Called when a sample is selected from the dropdown.
+     * @param e SelectedChanged Event
+     */
+    EditResourceComponent.prototype.sampleSelected = function (e) {
+        var selectedId = e.value;
+        this.resource = this.samples.find(function (q) { return q.id === selectedId; }).resource;
+        this.error = null;
+    };
+    /**
+     * Open a snack bar at the bottom to show a small message.
+     * @param message Message to be shown
+     * @param action Text to be shown on the Action Button
+     */
+    EditResourceComponent.prototype.openSnackBar = function (message, action) {
+        this._snackBar.open(message, action, {
+            duration: 2000,
+        });
+    };
     EditResourceComponent.prototype.ngOnDestroy = function () {
         this._unsubscribe.next();
         this._unsubscribe.complete();
@@ -2303,7 +2345,9 @@ var EditResourceComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"],
             _angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
             _services_helper_service__WEBPACK_IMPORTED_MODULE_2__["HelperService"],
-            _services_smart_service__WEBPACK_IMPORTED_MODULE_3__["SmartService"]])
+            _services_smart_service__WEBPACK_IMPORTED_MODULE_3__["SmartService"],
+            _services_data_service__WEBPACK_IMPORTED_MODULE_5__["DataService"],
+            _angular_material__WEBPACK_IMPORTED_MODULE_6__["MatSnackBar"]])
     ], EditResourceComponent);
     return EditResourceComponent;
 }());
@@ -2509,7 +2553,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-progress-bar *ngIf=\"isLoading\" mode=\"indeterminate\"></mat-progress-bar>\r\n<mat-card class=\"mat-elevation-z8\">\r\n  <mat-card-title>\r\n    <div class=\"row\">\r\n      <div class=\"col-md-2 col-xs-1\">\r\n        <span>{{resourceType}}</span>\r\n      </div>\r\n      <div class=\"col-xs-3 col-md-9\">\r\n      </div>\r\n      <button mat-raised-button color=\"primary\" routerLink=\"/resources/{{resourceType}}/new\">Add</button>\r\n    </div>\r\n  </mat-card-title>\r\n  <mat-card-content>\r\n    <mat-accordion>\r\n      <mat-expansion-panel>\r\n        <mat-expansion-panel-header>\r\n          <mat-panel-title>\r\n            Filter\r\n          </mat-panel-title>\r\n          <mat-panel-description>\r\n            Specify the filter as JSON(mongodb-like query syntax)\r\n          </mat-panel-description>\r\n        </mat-expansion-panel-header>\r\n        <div class=\"min-padding\">\r\n          Search Parameters Supported\r\n          <mat-list role=\"list\">\r\n            <mat-list-item role=\"listitem\" *ngFor=\"let param of searchParams\" matTooltip=\"{{param.documentation}}\">\r\n              <h4 mat-line>{{param.name}}</h4>\r\n              <p mat-line>{{param.type}}</p>\r\n              <div>{{param.documentation}}</div>\r\n            </mat-list-item>\r\n          </mat-list>\r\n        </div>\r\n        <ace-editor [(text)]=\"queryCode\" style=\"height:100px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n        <div class=\"min-padding\">\r\n          <span class=\"min-padding\">\r\n            <button mat-raised-button color=\"primary\" (click)=\"applyFilter()\">Apply</button>\r\n          </span>\r\n          <button mat-raised-button color=\"warn\" (click)=\"reset()\">Reset</button>\r\n        </div>\r\n      </mat-expansion-panel>\r\n    </mat-accordion>\r\n    <app-resources-table *ngIf=\"!error\" [bundle]=\"resources\" [resourceType]=\"resourceType\"></app-resources-table>\r\n  </mat-card-content>\r\n</mat-card>\r\n<app-object-viewer *ngIf=\"error\" title=\"Error\" [value]=\"error\" hideView=\"true\"></app-object-viewer>"
+module.exports = "<mat-progress-bar *ngIf=\"isLoading\" mode=\"indeterminate\"></mat-progress-bar>\r\n<mat-card class=\"mat-elevation-z8\">\r\n  <mat-card-title>\r\n    <div class=\"row\">\r\n      <div class=\"col-md-2 col-xs-1\">\r\n        <span>{{resourceType}}</span>\r\n      </div>\r\n      <div class=\"col-xs-3 col-md-9\">\r\n      </div>\r\n      <button mat-raised-button color=\"primary\" routerLink=\"/resources/{{resourceType}}/new\">Add</button>\r\n    </div>\r\n  </mat-card-title>\r\n  <mat-card-content>\r\n    <mat-accordion>\r\n      <mat-expansion-panel>\r\n        <mat-expansion-panel-header>\r\n          <mat-panel-title>\r\n            Filter\r\n          </mat-panel-title>\r\n          <mat-panel-description>\r\n            Specify the filter as JSON [<a href=\"https://github.com/FHIR/fhir.js/blob/master/README.md#search\">Reference</a>]\r\n          </mat-panel-description>\r\n        </mat-expansion-panel-header>\r\n        <div class=\"min-padding\">\r\n          Search Parameters Supported\r\n          <mat-list role=\"list\">\r\n            <mat-list-item role=\"listitem\" *ngFor=\"let param of searchParams\" matTooltip=\"{{param.documentation}}\">\r\n              <h4 mat-line>{{param.name}}</h4>\r\n              <p mat-line>{{param.type}}</p>\r\n              <div>{{param.documentation}}</div>\r\n            </mat-list-item>\r\n          </mat-list>\r\n        </div>\r\n        <ace-editor mode=\"text\" [(text)]=\"queryCode\" style=\"height:100px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n        <div class=\"min-padding\">\r\n          <span class=\"min-padding\">\r\n            <button mat-raised-button color=\"primary\" (click)=\"applyFilter()\" *ngIf=\"!invalidJson\">Apply</button>\r\n          </span>\r\n          <button mat-raised-button color=\"warn\" (click)=\"reset()\">Reset</button>\r\n        </div>\r\n      </mat-expansion-panel>\r\n    </mat-accordion>\r\n    <app-resources-table *ngIf=\"!error\" [bundle]=\"resources\" [resourceType]=\"resourceType\"></app-resources-table>\r\n  </mat-card-content>\r\n</mat-card>\r\n<app-object-viewer *ngIf=\"error\" title=\"Error\" [value]=\"error\" hideView=\"true\"></app-object-viewer>"
 
 /***/ }),
 
@@ -2656,8 +2700,10 @@ var ResourcesTableContainerComponent = /** @class */ (function () {
         set: function (v) {
             try {
                 this.query = JSON.parse(v);
+                this.invalidJson = false;
             }
             catch (e) {
+                this.invalidJson = true;
                 console.log('error occored while you were typing the JSON');
             }
         },
@@ -2704,7 +2750,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<mat-tab-group>\r\n  <mat-tab label=\"LIST\">\r\n    <mat-list *ngIf=\"bundle\">\r\n      <div *ngFor=\"let entry of bundle.entry\">\r\n        <div *ngIf=\"entry.resource.resourceType !== 'OperationOutcome'\">\r\n          <mat-list-item>\r\n            <p mat-line>ID: {{entry.resource.id}} </p>\r\n            <button mat-raised-button color=\"primary\" routerLink=\"/resources/{{entry.resource.resourceType}}/{{entry.resource.id}}\">View</button>\r\n          </mat-list-item>\r\n        </div>\r\n      </div>\r\n    </mat-list>\r\n    <div *ngIf=\"bundle && bundle.total == 0\">\r\n      There are no resources of type {{resourceType}}\r\n    </div>\r\n  </mat-tab>\r\n  <mat-tab label=\"JSON\">\r\n    <ace-editor [text]=\"codeBundle\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n  </mat-tab>\r\n</mat-tab-group>"
+module.exports = "<mat-tab-group>\r\n  <mat-tab label=\"LIST\">\r\n    <mat-list *ngIf=\"bundle\">\r\n      <div>Total Number of resources on the Server:{{bundle.total}}</div>\r\n      <div *ngIf=\"bundle.entry\">Number of resources returned by the Query:{{bundle.entry.length}}</div>\r\n      <div *ngFor=\"let entry of bundle.entry\">\r\n        <div *ngIf=\"entry.resource.resourceType !== 'OperationOutcome'\">\r\n          <mat-list-item>\r\n            <p mat-line>ID: {{entry.resource.id}} </p>\r\n            <button mat-raised-button color=\"primary\" routerLink=\"/resources/{{entry.resource.resourceType}}/{{entry.resource.id}}\">View</button>\r\n          </mat-list-item>\r\n        </div>\r\n      </div>\r\n    </mat-list>\r\n    <div *ngIf=\"bundle && bundle.total == 0\">\r\n      There are no resources of type {{resourceType}}\r\n    </div>\r\n  </mat-tab>\r\n  <mat-tab label=\"JSON\">\r\n    <ace-editor mode=\"text\" [text]=\"codeBundle\" style=\"height:500px;\" [theme]=\"'eclipse'\"></ace-editor>\r\n  </mat-tab>\r\n</mat-tab-group>"
 
 /***/ }),
 
@@ -2880,7 +2926,11 @@ var FHIR_SERVERS = [
         name: 'CHBase PPE',
         baseUrl: 'https://platform.ppe.chbase.com/api/fhir',
         information: {
-            patientStandalone: [],
+            patientStandalone: [
+                'Application Configuration Center: https://acc.ppe.chbase.com',
+                'CHBase Shell: https://shell.ppe.chbase.com',
+                'Developer Portal: https://developer.chbase.com/FHIR',
+            ],
             ehrLaunch: [
                 'Login to the CHBase Shell and visit the App directory page',
                 'Click on Learn more about the app',
@@ -2888,6 +2938,879 @@ var FHIR_SERVERS = [
             ]
         },
         supportsAccessTypes: true
+    },
+    {
+        uniqueName: 'ellie1',
+        name: 'CHBase Ellie1',
+        baseUrl: 'http://ellie1.platform.ramdev.inetxperts.net/api/fhir',
+        information: {
+            patientStandalone: [
+                'Application Configuration Center: https://acc.ppe.chbase.com',
+                'CHBase Shell: https://shell.ppe.chbase.com',
+                'Developer Portal: https://developer.chbase.com/FHIR',
+            ],
+            ehrLaunch: [
+                'Login to the CHBase Shell(https://shell.ppe.chbase.com) and visit the App directory page',
+                'Click on Learn more about the app',
+                'Click on Go to application (external link)'
+            ]
+        },
+        supportsAccessTypes: true
+    }
+];
+
+
+/***/ }),
+
+/***/ "./src/app/data/resources/observations.ts":
+/*!************************************************!*\
+  !*** ./src/app/data/resources/observations.ts ***!
+  \************************************************/
+/*! exports provided: OBSERVATIONS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OBSERVATIONS", function() { return OBSERVATIONS; });
+// tslint:disable:quotemark
+var OBSERVATIONS = [
+    {
+        id: 1,
+        name: 'Blank',
+        resource: {
+            "resourceType": "Observation"
+        }
+    },
+    {
+        id: 2,
+        name: 'Weight',
+        resource: {
+            "resourceType": "Observation",
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ],
+                    "text": "Vital Signs"
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "29463-7",
+                        "display": "Body Weight"
+                    }
+                ]
+            },
+            "effectiveDateTime": "2016-03-28",
+            "valueQuantity": {
+                "value": 185,
+                "unit": "lbs",
+                "system": "http://unitsofmeasure.org",
+                "code": "[lb_av]"
+            }
+        }
+    },
+    {
+        id: 3,
+        name: 'Height',
+        resource: {
+            "resourceType": "Observation",
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ],
+                    "text": "Vital Signs"
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "8302-2",
+                        "display": "Body height"
+                    }
+                ],
+                "text": "Body height"
+            },
+            "effectiveDateTime": "1999-07-02",
+            "valueQuantity": {
+                "value": 66.899999999999991,
+                "unit": "in",
+                "system": "http://unitsofmeasure.org",
+                "code": "[in_i]"
+            }
+        }
+    },
+    {
+        id: 4,
+        name: 'Length',
+        resource: {
+            "resourceType": "Observation",
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ],
+                    "text": "Vital Signs"
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "8306-3",
+                        "display": "Body height --lying"
+                    }
+                ],
+                "text": "Body Length"
+            },
+            "effectiveDateTime": "1999-07-02",
+            "valueQuantity": {
+                "value": 25,
+                "unit": "cm",
+                "system": "http://unitsofmeasure.org",
+                "code": "cm"
+            }
+        }
+    },
+    {
+        id: 5,
+        name: 'Heart Rate',
+        resource: {
+            "resourceType": "Observation",
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ],
+                    "text": "Vital Signs"
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "8867-4",
+                        "display": "Heart rate"
+                    }
+                ],
+                "text": "Heart rate"
+            },
+            "effectiveDateTime": "1999-07-02",
+            "valueQuantity": {
+                "value": 44,
+                "unit": "beats/minute",
+                "system": "http://unitsofmeasure.org",
+                "code": "/min"
+            }
+        }
+    },
+    {
+        id: 6,
+        name: 'Blood Pressure',
+        resource: {
+            "resourceType": "Observation",
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ]
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "85354-9",
+                        "display": "Bood pressure panel with all children optional"
+                    }
+                ],
+                "text": "Blood pressure systolic & diastolic"
+            },
+            "effectiveDateTime": "2012-09-17",
+            "component": [
+                {
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "http://loinc.org",
+                                "code": "8480-6",
+                                "display": "Systolic blood pressure"
+                            },
+                            {
+                                "system": "http://snomed.info/sct",
+                                "code": "271649006",
+                                "display": "Systolic blood pressure"
+                            },
+                            {
+                                "system": "http://acme.org/devices/clinical-codes",
+                                "code": "bp-s",
+                                "display": "Systolic Blood pressure"
+                            }
+                        ]
+                    },
+                    "valueQuantity": {
+                        "value": 107,
+                        "unit": "mmHg",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "mm[Hg]"
+                    }
+                },
+                {
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "http://loinc.org",
+                                "code": "8462-4",
+                                "display": "Diastolic blood pressure"
+                            }
+                        ]
+                    },
+                    "valueQuantity": {
+                        "value": 60,
+                        "unit": "mmHg",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "mm[Hg]"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        id: 7,
+        name: 'Blood Glucose',
+        resource: {
+            "resourceType": "Observation",
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "15074-8",
+                        "display": "Glucose [Moles/volume] in Blood"
+                    }
+                ]
+            },
+            "effectivePeriod": {
+                "start": "2013-04-02T09:30:10+01:00"
+            },
+            "valueQuantity": {
+                "value": 6.3,
+                "unit": "mmol/l",
+                "system": "http://unitsofmeasure.org",
+                "code": "mmol/L"
+            }
+        }
+    },
+    {
+        id: 8,
+        name: 'Vitals Panel',
+        resource: {
+            "resourceType": "Observation",
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ],
+                    "text": "Vital Signs"
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://loinc.org",
+                        "code": "85353-1",
+                        "display": "Vital signs, weight, height, head circumference, oxygen saturation and BMI panel"
+                    }
+                ],
+                "text": "Vital signs Panel"
+            },
+            "effectiveDateTime": "1999-07-02",
+            "contained": [
+                {
+                    "resourceType": "Observation",
+                    "status": "final",
+                    "category": [
+                        {
+                            "coding": [
+                                {
+                                    "system": "http://hl7.org/fhir/observation-category",
+                                    "code": "vital-signs",
+                                    "display": "Vital Signs"
+                                }
+                            ],
+                            "text": "Vital Signs"
+                        }
+                    ],
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "http://loinc.org",
+                                "code": "8867-4",
+                                "display": "Heart rate"
+                            }
+                        ],
+                        "text": "Heart rate"
+                    },
+                    "effectiveDateTime": "1999-07-02",
+                    "valueQuantity": {
+                        "value": 44,
+                        "unit": "beats/minute",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "/min"
+                    }
+                },
+                {
+                    "resourceType": "Observation",
+                    "status": "final",
+                    "category": [
+                        {
+                            "coding": [
+                                {
+                                    "system": "http://hl7.org/fhir/observation-category",
+                                    "code": "vital-signs",
+                                    "display": "Vital Signs"
+                                }
+                            ],
+                            "text": "Vital Signs"
+                        }
+                    ],
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "http://loinc.org",
+                                "code": "29463-7",
+                                "display": "Body Weight"
+                            }
+                        ]
+                    },
+                    "effectiveDateTime": "2016-03-28",
+                    "valueQuantity": {
+                        "value": 185,
+                        "unit": "lbs",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "[lb_av]"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        id: 9,
+        name: 'Exercise',
+        resource: {
+            "resourceType": "Observation",
+            "text": {
+                "div": "New Swim"
+            },
+            "extension": [
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/StructuredDefinition/thing-flags",
+                    "valueString": "None"
+                },
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/StructuredDefinition/thing-state",
+                    "valueString": "Active"
+                },
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/StructuredDefinition/exercise-detail",
+                    "extension": [
+                        {
+                            "url": "name",
+                            "valueString": "lap 1"
+                        },
+                        {
+                            "url": "type",
+                            "valueCoding": {
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
+                            }
+                        },
+                        {
+                            "url": "value",
+                            "valueQuantity": {
+                                "value": 30,
+                                "unit": "seconds",
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/duration-units",
+                                "code": "s"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/StructuredDefinition/exercise-detail",
+                    "extension": [
+                        {
+                            "url": "name",
+                            "valueString": "lap 2"
+                        },
+                        {
+                            "url": "type",
+                            "valueCoding": {
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
+                            }
+                        },
+                        {
+                            "url": "value",
+                            "valueQuantity": {
+                                "value": 28,
+                                "unit": "seconds",
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/duration-units",
+                                "code": "s"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/StructuredDefinition/exercise-segment",
+                    "extension": [
+                        {
+                            "url": "activity",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                        "version": "1",
+                                        "code": "swimming"
+                                    }
+                                ],
+                                "text": "Swimming"
+                            }
+                        },
+                        {
+                            "url": "title",
+                            "valueString": "Segment 1"
+                        },
+                        {
+                            "url": "duration",
+                            "valueDecimal": 180
+                        },
+                        {
+                            "url": "distance",
+                            "valueQuantity": {
+                                "value": 31.5,
+                                "unit": "m"
+                            }
+                        },
+                        {
+                            "url": "offset",
+                            "valueDecimal": 43.3
+                        },
+                        {
+                            "url": "https://developer.chbase.com/fhir/stu3/StructuredDefinition/exercise-detail",
+                            "extension": [
+                                {
+                                    "url": "name",
+                                    "valueString": "segment 1 - lap 1"
+                                },
+                                {
+                                    "url": "type",
+                                    "valueCoding": {
+                                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                        "version": "1",
+                                        "code": "swimming"
+                                    }
+                                },
+                                {
+                                    "url": "value",
+                                    "valueQuantity": {
+                                        "value": 46.2,
+                                        "unit": "seconds",
+                                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/duration-units",
+                                        "code": "s"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "url": "https://developer.chbase.com/fhir/stu3/StructuredDefinition/exercise-detail",
+                            "extension": [
+                                {
+                                    "url": "name",
+                                    "valueString": "segment 1 - lap 2"
+                                },
+                                {
+                                    "url": "type",
+                                    "valueCoding": {
+                                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                        "version": "1",
+                                        "code": "swimming"
+                                    }
+                                },
+                                {
+                                    "url": "value",
+                                    "valueQuantity": {
+                                        "value": 21,
+                                        "unit": "seconds",
+                                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/duration-units",
+                                        "code": "s"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                        "version": "1",
+                        "code": "txtNameexercise",
+                        "display": "Exercise"
+                    }
+                ]
+            },
+            "effectiveDateTime": "2017-08-25T16:05:54.081-07:00",
+            "component": [
+                {
+                    "code": {
+                        "text": "exercise-distance"
+                    },
+                    "valueQuantity": {
+                        "value": 30,
+                        "unit": "m",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "m"
+                    }
+                },
+                {
+                    "code": {
+                        "text": "exercise-duration"
+                    },
+                    "valueQuantity": {
+                        "value": 10,
+                        "unit": "min",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "min"
+                    }
+                },
+                {
+                    "code": {
+                        "text": "exercise-activity"
+                    },
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
+                            }
+                        ],
+                        "text": "Swimming"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        id: 10,
+        name: 'Sleep Journal',
+        resource: {
+            "resourceType": "Observation",
+            "extension": [
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
+                    "valueString": "None"
+                },
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
+                    "valueString": "Active"
+                }
+            ],
+            "status": "final",
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                        "version": "1",
+                        "code": "txtNamesleepjournal-am",
+                        "display": "\tSleep session"
+                    }
+                ]
+            },
+            "effectiveDateTime": "2017-08-29T16:24:44.25-07:00",
+            "component": [
+                {
+                    "code": {
+                        "text": "sleep-journal-bed-time"
+                    },
+                    "valueTime": "22:30:00.9"
+                },
+                {
+                    "code": {
+                        "text": "sleep-journal-wake-time"
+                    },
+                    "valueTime": "06:28:59.1823"
+                },
+                {
+                    "code": {
+                        "text": "sleep-journal-sleep-minutes"
+                    },
+                    "valueQuantity": {
+                        "value": 100,
+                        "unit": "min",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "min"
+                    }
+                },
+                {
+                    "code": {
+                        "text": "sleep-journal-settling-minutes"
+                    },
+                    "valueQuantity": {
+                        "value": 110,
+                        "unit": "min",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "min"
+                    }
+                },
+                {
+                    "code": {
+                        "text": "sleep-journal-awakening"
+                    },
+                    "valuePeriod": {
+                        "start": "2017-08-29T23:30:00-07:00",
+                        "end": "2017-08-30T00:10:00-07:00"
+                    }
+                },
+                {
+                    "code": {
+                        "text": "sleep-journal-awakening"
+                    },
+                    "valuePeriod": {
+                        "start": "2017-08-29T00:30:00-07:00",
+                        "end": "2017-08-29T00:40:00-07:00"
+                    }
+                },
+                {
+                    "code": {
+                        "text": "sleep-journal-wake-state"
+                    },
+                    "valueString": "Tired"
+                },
+                {
+                    "code": {
+                        "text": "sleep-journal-medication"
+                    },
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/RxNorm/Mayo",
+                                "version": "2",
+                                "code": "ccabbac8-58f0-4e88-a1eb-538e21e7524d"
+                            }
+                        ],
+                        "text": "Benzaclin"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        id: 11,
+        name: 'Body Composition',
+        resource: {
+            "resourceType": "Observation",
+            "extension": [
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
+                    "valueString": "None"
+                },
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
+                    "valueString": "Active"
+                }
+            ],
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ],
+                    "text": "Vital Signs"
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                        "version": "1",
+                        "code": "txtNamebody-composition",
+                        "display": "Body composition"
+                    }
+                ]
+            },
+            "effectiveDateTime": "2017-08-03T08:30:01-07:00",
+            "bodySite": {
+                "coding": [
+                    {
+                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/body-composition-sites",
+                        "version": "1",
+                        "code": "Trunk"
+                    }
+                ],
+                "text": "Trunk"
+            },
+            "method": {
+                "coding": [
+                    {
+                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/body-composition-measurement-methods",
+                        "version": "1",
+                        "code": "DXA"
+                    }
+                ],
+                "text": "DXA/DEXA"
+            },
+            "component": [
+                {
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/body-composition-measurement-names",
+                                "version": "1",
+                                "code": "fat-percent"
+                            }
+                        ],
+                        "text": "Body fat percentage"
+                    }
+                },
+                {
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/body-composition-measurement-names",
+                                "version": "1",
+                                "code": "fat-percent"
+                            }
+                        ],
+                        "text": "Body fat percentage"
+                    },
+                    "valueQuantity": {
+                        "value": 10,
+                        "unit": "kg",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "kg"
+                    }
+                },
+                {
+                    "code": {
+                        "coding": [
+                            {
+                                "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/body-composition-measurement-names",
+                                "version": "1",
+                                "code": "fat-percent"
+                            }
+                        ],
+                        "text": "Body fat percentage"
+                    },
+                    "valueQuantity": {
+                        "value": 0.15,
+                        "unit": "%",
+                        "system": "http://unitsofmeasure.org",
+                        "code": "%"
+                    }
+                }
+            ]
+        }
+    },
+    {
+        id: 12,
+        name: 'Body Dimension',
+        resource: {
+            "resourceType": "Observation",
+            "extension": [
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
+                    "valueString": "None"
+                },
+                {
+                    "url": "https://developer.chbase.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
+                    "valueString": "Active"
+                }
+            ],
+            "status": "final",
+            "category": [
+                {
+                    "coding": [
+                        {
+                            "system": "http://hl7.org/fhir/observation-category",
+                            "code": "vital-signs",
+                            "display": "Vital Signs"
+                        }
+                    ],
+                    "text": "Vital Signs"
+                }
+            ],
+            "code": {
+                "coding": [
+                    {
+                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                        "version": "1",
+                        "code": "txtNamebody-dimension",
+                        "display": "Body dimension"
+                    }
+                ]
+            },
+            "effectiveDateTime": "2017-08-02T11:13:14-07:00",
+            "valueQuantity": {
+                "value": 0.15,
+                "unit": "m",
+                "system": "http://unitsofmeasure.org",
+                "code": "m"
+            },
+            "method": {
+                "coding": [
+                    {
+                        "system": "https://developer.chbase.com/fhir/stu3/ValueSet/wc/body-dimension-measurement-names",
+                        "version": "1",
+                        "code": "BicepCircumferenceLeft"
+                    }
+                ],
+                "text": "Left bicep size"
+            }
+        }
     }
 ];
 
@@ -3103,6 +4026,57 @@ var ClientAppService = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], ClientAppService);
     return ClientAppService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/data.service.ts":
+/*!******************************************!*\
+  !*** ./src/app/services/data.service.ts ***!
+  \******************************************/
+/*! exports provided: DataService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataService", function() { return DataService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _data_resources_observations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../data/resources/observations */ "./src/app/data/resources/observations.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var DataService = /** @class */ (function () {
+    function DataService() {
+    }
+    DataService.prototype.getData = function (resourceType) {
+        return rxjs__WEBPACK_IMPORTED_MODULE_1__["Observable"].create(function (observer) {
+            switch (resourceType.toLocaleLowerCase()) {
+                case 'observation':
+                    observer.next(_data_resources_observations__WEBPACK_IMPORTED_MODULE_2__["OBSERVATIONS"]);
+                    break;
+            }
+            observer.complete();
+        });
+    };
+    DataService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [])
+    ], DataService);
+    return DataService;
 }());
 
 
@@ -3548,7 +4522,8 @@ var SmartService = /** @class */ (function () {
         }
         var httpHeaders = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpHeaders"](headers);
         var httpOptions = {
-            headers: httpHeaders
+            headers: httpHeaders,
+            withCredentials: true
         };
         var refresh_token = this.getRefreshToken();
         var params = {
@@ -3563,6 +4538,7 @@ var SmartService = /** @class */ (function () {
         this._http.post(token_uri, bodyParams, httpOptions).subscribe(function (response) {
             var existingTokenRespsonse = smartClient.tokenResponse;
             existingTokenRespsonse.access_token = response.access_token;
+            existingTokenRespsonse.refresh_token = response.refresh_token;
             // The new tokenResponse is updated in the SessionStorage. The SMART on FHIR JS client makes use of this.
             sessionStorage.setItem('tokenResponse', JSON.stringify(existingTokenRespsonse));
             var expiresIn = existingTokenRespsonse.expires_in;
