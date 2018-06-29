@@ -18,7 +18,7 @@
             Filter
           </mat-panel-title>
           <mat-panel-description>
-            Specify the filter as JSON(mongodb-like query syntax)
+            Specify the filter as JSON [<a href="https://github.com/FHIR/fhir.js/blob/master/README.md#search">Reference</a>]
           </mat-panel-description>
         </mat-expansion-panel-header>
         <div class="min-padding">
@@ -31,10 +31,10 @@
             </mat-list-item>
           </mat-list>
         </div>
-        <ace-editor [(text)]="queryCode" style="height:100px;" [theme]="'eclipse'"></ace-editor>
+        <ace-editor mode="text" [(text)]="queryCode" style="height:100px;" [theme]="'eclipse'"></ace-editor>
         <div class="min-padding">
           <span class="min-padding">
-            <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+            <button mat-raised-button color="primary" (click)="applyFilter()" *ngIf="!invalidJson">Apply</button>
           </span>
           <button mat-raised-button color="warn" (click)="reset()">Reset</button>
         </div>

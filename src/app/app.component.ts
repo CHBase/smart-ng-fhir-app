@@ -32,6 +32,11 @@ export class AppComponent implements OnInit, OnDestroy {
     */
   private _unsubscribe = new Subject<void>();
 
+  /**
+   * SMART on FHIR Server the application is connected to.
+   */
+  connectedServer: string;
+
   constructor(
     private _zone: NgZone,
     private _router: Router,
@@ -68,6 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
           .subscribe(smartClient => {
             this._zone.run(() => {
               this.canSwitchPatient = smartClient.state.client.scope.indexOf('launch/patient') !== -1;
+              this.connectedServer = smartClient.state.server;
             });
           });
       }

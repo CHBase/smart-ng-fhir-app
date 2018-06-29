@@ -9,10 +9,19 @@
     </div>
   </mat-card-title>
   <mat-card-content>
+    <div *ngIf="!resourceResponse">
+      <mat-form-field>
+        <mat-select placeholder="Samples" (selectionChange)="sampleSelected($event)">
+          <mat-option *ngFor="let sample of samples" [value]="sample.id">
+            {{sample.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div>
       <mat-tab-group [selectedIndex]="selectedTabIndex">
         <mat-tab *ngIf="resource" label="JSON">
-          <ace-editor [(text)]="code" style="height:500px;" [theme]="'eclipse'" [autoUpdateContent]="false"></ace-editor>
+          <ace-editor mode="text" [(text)]="code" style="height:500px;" [theme]="'eclipse'" [autoUpdateContent]="true"></ace-editor>
         </mat-tab>
         <mat-tab *ngIf="resource" label="View">
           <ngx-json-viewer *ngIf="resource" [json]="resource"></ngx-json-viewer>
@@ -21,22 +30,23 @@
           <div class="row">
             <div class="col-md-6">
               <h4>Request</h4>
-              <ace-editor [text]="codeResourceRequest" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+              <ace-editor mode="text" [text]="codeResourceRequest" style="height:500px;" [theme]="'eclipse'"></ace-editor>
             </div>
             <div class="col-md-6">
               <h4>Response</h4>
-              <ace-editor [text]="codeResourceResponse" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+              <ace-editor mode="text" [text]="codeResourceResponse" style="height:500px;" [theme]="'eclipse'"></ace-editor>
             </div>
           </div>
         </mat-tab>
         <mat-tab *ngIf="error" label="Error">
-          <ace-editor *ngIf="error" [text]="codeError" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+          <ace-editor mode="text" *ngIf="error" [text]="codeError" style="height:500px;" [theme]="'eclipse'"></ace-editor>
         </mat-tab>
       </mat-tab-group>
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary" *ngIf="!error && canUpdate && !resourceResponse" (click)="save()">SAVE</button>
+    <button mat-raised-button color="primary" *ngIf="((!error && canUpdate && !resourceResponse) || (error && id==='new')) && !invalidJson"
+      (click)="save()">SAVE</button>
     <button mat-raised-button color="warn" routerLink="/resources/{{resourceType}}">CANCEL</button>
   </mat-card-actions>
 </mat-card>

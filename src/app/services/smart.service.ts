@@ -132,7 +132,8 @@ export class SmartService {
     }
     const httpHeaders: HttpHeaders = new HttpHeaders(headers);
     const httpOptions = {
-      headers: httpHeaders
+      headers: httpHeaders,
+      withCredentials: true
     };
     const refresh_token = this.getRefreshToken();
     const params: any = {
@@ -148,6 +149,7 @@ export class SmartService {
     this._http.post<any>(token_uri, bodyParams, httpOptions).subscribe(response => {
       const existingTokenRespsonse = smartClient.tokenResponse;
       existingTokenRespsonse.access_token = response.access_token;
+      existingTokenRespsonse.refresh_token = response.refresh_token;
       // The new tokenResponse is updated in the SessionStorage. The SMART on FHIR JS client makes use of this.
       sessionStorage.setItem('tokenResponse', JSON.stringify(existingTokenRespsonse));
       const expiresIn = existingTokenRespsonse.expires_in;

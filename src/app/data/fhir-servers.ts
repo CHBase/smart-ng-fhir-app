@@ -9,6 +9,9 @@ export const FHIR_SERVERS: FhirServer[] = [
         baseUrl: 'https://platform.ppe.chbase.com/api/fhir',
         information: {
             patientStandalone: [
+                'Application Configuration Center: https://acc.ppe.chbase.com',
+                'CHBase Shell: https://shell.ppe.chbase.com',
+                'Developer Portal: https://developer.chbase.com/FHIR',
             ],
             ehrLaunch: [
                 'Login to the CHBase Shell and visit the App directory page',

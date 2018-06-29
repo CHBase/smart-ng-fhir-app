@@ -1,20 +1,25 @@
 <div>
   <mat-toolbar color="primary">
-    <button *ngIf="isLoggedIn$ | async" mat-icon-button (click)="snav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>Sample FHIR Application using Angular and SMART Javascript Client Library</span>
-    <span class="spacer"></span>
-    <app-access-token-timer></app-access-token-timer>
-    <span class="min-padding">
-      <button mat-raised-button (click)="requestResponseLog.toggle();">Request Response Logs</button>
-    </span>
-    <span class="min-padding" *ngIf="isLoggedIn$ | async">
-      <button mat-raised-button color="warn" *ngIf="canSwitchPatient" (click)="switchPatient();snav.toggle();">Switch Patient</button>
-    </span>
-    <span class="min-padding">
-      <button mat-raised-button color="warn" *ngIf="isLoggedIn$ | async" (click)="logout();snav.toggle();">Signout</button>
-    </span>
+    <mat-toolbar-row>
+      <button *ngIf="isLoggedIn$ | async" mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Sample SMART on FHIR Application</span>
+      <span class="spacer"></span>
+      <app-access-token-timer></app-access-token-timer>
+      <span class="min-padding">
+        <button mat-raised-button (click)="requestResponseLog.toggle();">Request Response Logs</button>
+      </span>
+      <span class="min-padding" *ngIf="isLoggedIn$ | async">
+        <button mat-raised-button color="warn" *ngIf="canSwitchPatient" (click)="switchPatient();snav.toggle();">Switch Patient</button>
+      </span>
+      <span class="min-padding">
+        <button mat-raised-button color="warn" *ngIf="isLoggedIn$ | async" (click)="logout();snav.toggle();">Signout</button>
+      </span>
+    </mat-toolbar-row>
+    <mat-toolbar-row *ngIf="isLoggedIn$ | async">
+      <h4>Server: {{connectedServer}}</h4>
+    </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container class="side-nav-container">
     <mat-sidenav #snav mode="side" opened="false">

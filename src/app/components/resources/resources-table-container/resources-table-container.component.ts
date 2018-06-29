@@ -47,6 +47,8 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
    */
   isLoading: boolean;
 
+  invalidJson: boolean;
+
   private _unsubscribe = new Subject<void>();
 
   constructor(
@@ -151,7 +153,9 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   set queryCode(v) {
     try {
       this.query = JSON.parse(v);
+      this.invalidJson = false;
     } catch (e) {
+      this.invalidJson = true;
       console.log('error occored while you were typing the JSON');
     }
   }

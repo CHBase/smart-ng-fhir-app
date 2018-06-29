@@ -8,7 +8,7 @@
         <ngx-json-viewer *ngIf="value" [json]="value"></ngx-json-viewer>
       </mat-tab>
       <mat-tab label="JSON">
-        <ace-editor [text]="codeValue" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+        <ace-editor mode="text" [text]="codeValue" style="height:500px;" [theme]="'eclipse'"></ace-editor>
       </mat-tab>
     </mat-tab-group>
   </mat-card-content>

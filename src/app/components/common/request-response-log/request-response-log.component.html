@@ -25,20 +25,20 @@
                 <div class="col-md-6">
                   <mat-tab-group>
                     <mat-tab label="Body">
-                      <ace-editor [text]="log.request.body" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                      <ace-editor mode="text" [text]="log.request.body" style="height:500px;" [theme]="'eclipse'"></ace-editor>
                     </mat-tab>
                     <mat-tab label="Headers">
-                      <ace-editor [text]="log.request.headers" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                      <ace-editor mode="text" [text]="log.request.headers" style="height:500px;" [theme]="'eclipse'"></ace-editor>
                     </mat-tab>
                   </mat-tab-group>
                 </div>
                 <div class="col-md-6">
                   <mat-tab-group>
                     <mat-tab label="Body">
-                      <ace-editor [text]="log.response.data" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                      <ace-editor mode="text" [text]="log.response.data" style="height:500px;" [theme]="'eclipse'"></ace-editor>
                     </mat-tab>
                     <mat-tab label="Headers">
-                      <ace-editor [text]="log.response.headers" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+                      <ace-editor mode="text" [text]="log.response.headers" style="height:500px;" [theme]="'eclipse'"></ace-editor>
                     </mat-tab>
                   </mat-tab-group>
                 </div>

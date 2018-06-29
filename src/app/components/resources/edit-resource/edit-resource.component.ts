@@ -4,6 +4,8 @@ import { HelperService } from '../../../services/helper.service';
 import { SmartService } from '../../../services/smart.service';
 import { GlobalService } from '../../../services/global.service';
 import { Subject } from 'rxjs';
+import { DataService } from '../../../services/data.service';
+import { MatSelectChange, MatSnackBar } from '@angular/material';
 
 /**
  * Component used to create/update a particular FHIR resource
@@ -68,13 +70,19 @@ export class EditResourceComponent implements OnInit, OnDestroy {
    */
   selectedTabIndex = 0;
 
+  samples: any[];
+
+  invalidJson: boolean;
+
   private _unsubscribe = new Subject<void>();
 
   constructor(
     private _zone: NgZone,
     private _route: ActivatedRoute,
     private _helperService: HelperService,
-    private _smartService: SmartService
+    private _smartService: SmartService,
+    private _dataService: DataService,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -94,6 +102,9 @@ export class EditResourceComponent implements OnInit, OnDestroy {
           this._setResource(smartClient);
         }
       });
+    this._dataService.getData(this.resourceType).subscribe(samples => {
+      this.samples = samples;
+    });
   }
 
   /**
@@ -134,6 +145,8 @@ export class EditResourceComponent implements OnInit, OnDestroy {
         this.resourceResponse = response;
       }
       this.selectedTabIndex = 2;
+      this.error = null;
+      this.openSnackBar('SUCCESS', 'OK');
     });
   }
 
@@ -145,6 +158,7 @@ export class EditResourceComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.error = error;
       this.selectedTabIndex = 3;
+      this.openSnackBar('ERROR OCCURED', 'OK');
     });
   }
 
@@ -154,6 +168,7 @@ export class EditResourceComponent implements OnInit, OnDestroy {
    * The SMART on FHIR JS Client create/update api is used.
    */
   save() {
+    this.error = null;
     this._smartService.getClient()
       .takeUntil(this._unsubscribe)
       .subscribe(smartClient => {
@@ -170,6 +185,11 @@ export class EditResourceComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Method called by the delete button.
+   * The resource object in the editor is passed on to the FHIR server
+   * The SMART on FHIR JS Client delete api is used.
+   */
   delete() {
     this._smartService.getClient()
       .takeUntil(this._unsubscribe)
@@ -217,8 +237,11 @@ export class EditResourceComponent implements OnInit, OnDestroy {
   set code(v) {
     try {
       this.resource = JSON.parse(v);
+      this.invalidJson = false;
     } catch (e) {
-      console.log('error occored while you were typing the JSON');
+      this._zone.run(() => {
+        this.invalidJson = true;
+      });
     }
   }
 
@@ -248,6 +271,27 @@ export class EditResourceComponent implements OnInit, OnDestroy {
    */
   get codeResourceResponse() {
     return JSON.stringify(this.resourceResponse, null, 2);
+  }
+
+  /**
+   * Called when a sample is selected from the dropdown.
+   * @param e SelectedChanged Event
+   */
+  sampleSelected(e: MatSelectChange) {
+    const selectedId = e.value;
+    this.resource = this.samples.find(q => q.id === selectedId).resource;
+    this.error = null;
+  }
+
+  /**
+   * Open a snack bar at the bottom to show a small message.
+   * @param message Message to be shown
+   * @param action Text to be shown on the Action Button
+   */
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
   ngOnDestroy() {
