@@ -8,7 +8,8 @@
       <span class="spacer"></span>
       <app-access-token-timer></app-access-token-timer>
       <span class="min-padding">
-        <button mat-raised-button (click)="requestResponseLog.toggle();">Request Response Logs</button>
+        <button mat-raised-button (click)="requestResponseLog.toggle();logsHidden = !logsHidden;" *ngIf="logsHidden">Show Request Response Logs</button>
+        <button mat-raised-button (click)="requestResponseLog.toggle();logsHidden = !logsHidden;" *ngIf="!logsHidden">Hide Request Response Logs</button>
       </span>
       <span class="min-padding" *ngIf="isLoggedIn$ | async">
         <button mat-raised-button color="warn" *ngIf="canSwitchPatient" (click)="switchPatient();snav.toggle();">Switch Patient</button>

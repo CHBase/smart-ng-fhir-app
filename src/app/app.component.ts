@@ -37,6 +37,8 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   connectedServer: string;
 
+  logsHidden = true;
+
   constructor(
     private _zone: NgZone,
     private _router: Router,

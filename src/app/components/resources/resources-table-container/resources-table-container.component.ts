@@ -47,7 +47,15 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
    */
   isLoading: boolean;
 
+  /**
+   * Flag to show whether the json entered in the editor is a valid JSON or not. The save button is hidden based on this flag.
+   */
   invalidJson: boolean;
+
+  /**
+   * Flag denoting whether the server has the capability to create a resource or the user has the required scope.
+   */
+  canCreate: boolean;
 
   private _unsubscribe = new Subject<void>();
 
@@ -70,6 +78,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
         .subscribe(smartClient => {
           this._setSupportedSearchParams(smartClient);
           this._searchByPatientId(smartClient);
+          this._canPerform(smartClient);
         });
     });
   }
@@ -165,6 +174,26 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
    */
   get queryCode() {
     return JSON.stringify(this.query, null, 2);
+  }
+
+  /**
+   * Method checks if the server has the capability to perform the particular interaction on  the particular FHIR resource type and
+   * the user has the required scope in context.
+   * @param smartClient Initialized SMART Client
+   */
+  private _canPerform(smartClient: FHIR.SMART.SMARTClient) {
+    this._smartService.getConformance()
+      .takeUntil(this._unsubscribe)
+      .subscribe(conformance => {
+        this._zone.run(() => {
+          this.canCreate = this._helperService.hasSupport(conformance, smartClient.tokenResponse.scope, this.resourceType, 'create');
+          console.log(this.canCreate);
+        });
+      }, error => {
+        this._zone.run(() => {
+          this.error = error;
+        });
+      });
   }
 
   ngOnDestroy() {
