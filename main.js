@@ -2954,9 +2954,10 @@ var FHIR_SERVERS = [
                 'Developer Portal: https://developer.chbase.com/FHIR',
             ],
             ehrLaunch: [
-                'Login to the CHBase Shell and visit the App directory page',
-                'Click on Learn more about the app',
-                'Click on Go to application (external link)'
+                'Login to the CHBase Shell : https://shell.ppe.chbase.com',
+                'Visit the App Directory : https://shell.ppe.chbase.com/Directory.aspx',
+                'Click on "Learn more about FHIR Sample App - Live Demo"',
+                'Click on "Go to application (external link)"'
             ]
         },
         supportsAccessTypes: true
