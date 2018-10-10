@@ -1,3 +1,4 @@
+declare var jwt: any;
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { GlobalService } from './global.service';
@@ -152,12 +153,6 @@ export class SmartService {
       existingTokenRespsonse.refresh_token = response.refresh_token;
       // The new tokenResponse is updated in the SessionStorage. The SMART on FHIR JS client makes use of this.
       sessionStorage.setItem('tokenResponse', JSON.stringify(existingTokenRespsonse));
-      const expiresIn = existingTokenRespsonse.expires_in;
-      const currentDate = new Date();
-      const expiresOn = new Date();
-      expiresOn.setSeconds(currentDate.getSeconds() + expiresIn);
-      // Storing till when the access token is valid in SessionStorage, which will be used to display the countdown timer
-      sessionStorage.setItem('tokenExpiresOn', expiresOn.toString());
       this.resetClient();
     }, error => {
       this._globalService.setError({ error: error });
@@ -205,33 +200,25 @@ export class SmartService {
     const timerObservable = timer(0, 1000);
     timerObservable.subscribe(x => {
       const tokenResponse = sessionStorage.getItem('tokenResponse');
-      const tokenExpiresOn = sessionStorage.getItem('tokenExpiresOn');
-      if (!tokenExpiresOn) {
-        if (tokenResponse) {
-          const token = JSON.parse(tokenResponse);
-          const accessToken = token.access_token;
-          if (accessToken) {
-            if (accessToken !== this._accessToken) {
-              this._accessToken = accessToken;
-              const expiresIn = token.expires_in;
-              const currentDate = new Date();
-              const expiresOn = new Date();
-              expiresOn.setSeconds(currentDate.getSeconds() + expiresIn);
-              sessionStorage.setItem('tokenExpiresOn', expiresOn.toString());
-              const seconds = this._helperService.howLong(expiresOn);
-              this._accessTokenValidityLeft.next(seconds);
-            }
-          }
+      if (tokenResponse) {
+        const tokenResponseJson = JSON.parse(tokenResponse);
+        if (tokenResponseJson) {
+          const payloadCheck = this.parseJwt(tokenResponseJson.access_token);
+          const timeLeft = payloadCheck['exp'] - Math.floor(Date.now() / 1000);
+          this._accessTokenValidityLeft.next(timeLeft);
         } else {
           this._accessTokenValidityLeft.next(0);
         }
       } else {
-        const getDiff = this._helperService.howLong(new Date(tokenExpiresOn));
-        if (getDiff >= 0) {
-          this._accessTokenValidityLeft.next(getDiff);
-        }
+        this._accessTokenValidityLeft.next(0);
       }
     });
     return this._accessTokenValidityLeft.asObservable();
+  }
+
+  parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(window.atob(base64));
   }
 }

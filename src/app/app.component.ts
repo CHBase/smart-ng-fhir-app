@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
   connectedServer: string;
 
   logsHidden = true;
-
+  initialized = false;
   constructor(
     private _zone: NgZone,
     private _router: Router,
@@ -69,11 +69,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // Determining if the application has the 'launch/patient' scope
     this.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
+      if (isLoggedIn && !this.initialized) {
         this._smartService.getClient()
           .takeUntil(this._unsubscribe)
           .subscribe(smartClient => {
             this._zone.run(() => {
+              this.initialized = true;
               this.canSwitchPatient = smartClient.state.client.scope.indexOf('launch/patient') !== -1;
               this.connectedServer = smartClient.state.server;
             });
