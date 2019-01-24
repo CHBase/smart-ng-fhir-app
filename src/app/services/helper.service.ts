@@ -42,7 +42,7 @@ export class HelperService {
       && conformance.rest.length > 0 && conformance.rest[0].resource
       && conformance.rest[0].resource.length > 0) {
       return conformance.rest[0].resource
-        .filter(q => (q.interaction.findIndex(x => x.code === interaction) !== -1))
+        .filter(q => (q.interaction && q.interaction.findIndex(x => x.code === interaction) !== -1))
         .map(y => y.type)
         .filter(q => {
           if (scopes) {
