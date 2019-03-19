@@ -265,6 +265,7 @@ var AppComponent = /** @class */ (function () {
           */
         this._unsubscribe = new rxjs__WEBPACK_IMPORTED_MODULE_0__["Subject"]();
         this.logsHidden = true;
+        this.initialized = false;
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -285,11 +286,12 @@ var AppComponent = /** @class */ (function () {
         });
         // Determining if the application has the 'launch/patient' scope
         this.isLoggedIn$.subscribe(function (isLoggedIn) {
-            if (isLoggedIn) {
+            if (isLoggedIn && !_this.initialized) {
                 _this._smartService.getClient()
                     .takeUntil(_this._unsubscribe)
                     .subscribe(function (smartClient) {
                     _this._zone.run(function () {
+                        _this.initialized = true;
                         _this.canSwitchPatient = smartClient.state.client.scope.indexOf('launch/patient') !== -1;
                         _this.connectedServer = smartClient.state.server;
                     });
@@ -2954,10 +2956,9 @@ var FHIR_SERVERS = [
                 'Developer Portal: https://developer.chbase.com/FHIR',
             ],
             ehrLaunch: [
-                'Login to the CHBase Shell : https://shell.ppe.chbase.com',
-                'Visit the App Directory : https://shell.ppe.chbase.com/Directory.aspx',
-                'Click on "Learn more about FHIR Sample App - Live Demo"',
-                'Click on "Go to application (external link)"'
+                'Login to the CHBase Shell and visit the App directory page',
+                'Click on Learn more about the app',
+                'Click on Go to application (external link)'
             ]
         },
         supportsAccessTypes: true
@@ -5486,7 +5487,7 @@ var HelperService = /** @class */ (function () {
             && conformance.rest.length > 0 && conformance.rest[0].resource
             && conformance.rest[0].resource.length > 0) {
             return conformance.rest[0].resource
-                .filter(function (q) { return (q.interaction.findIndex(function (x) { return x.code === interaction; }) !== -1); })
+                .filter(function (q) { return (q.interaction && q.interaction.findIndex(function (x) { return x.code === interaction; }) !== -1); })
                 .map(function (y) { return y.type; })
                 .filter(function (q) {
                 if (scopes) {
@@ -5759,12 +5760,6 @@ var SmartService = /** @class */ (function () {
             existingTokenRespsonse.refresh_token = response.refresh_token;
             // The new tokenResponse is updated in the SessionStorage. The SMART on FHIR JS client makes use of this.
             sessionStorage.setItem('tokenResponse', JSON.stringify(existingTokenRespsonse));
-            var expiresIn = existingTokenRespsonse.expires_in;
-            var currentDate = new Date();
-            var expiresOn = new Date();
-            expiresOn.setSeconds(currentDate.getSeconds() + expiresIn);
-            // Storing till when the access token is valid in SessionStorage, which will be used to display the countdown timer
-            sessionStorage.setItem('tokenExpiresOn', expiresOn.toString());
             _this.resetClient();
         }, function (error) {
             _this._globalService.setError({ error: error });
@@ -5803,36 +5798,27 @@ var SmartService = /** @class */ (function () {
         var timerObservable = Object(rxjs_observable_timer__WEBPACK_IMPORTED_MODULE_4__["timer"])(0, 1000);
         timerObservable.subscribe(function (x) {
             var tokenResponse = sessionStorage.getItem('tokenResponse');
-            var tokenExpiresOn = sessionStorage.getItem('tokenExpiresOn');
-            if (!tokenExpiresOn) {
-                if (tokenResponse) {
-                    var token = JSON.parse(tokenResponse);
-                    var accessToken = token.access_token;
-                    if (accessToken) {
-                        if (accessToken !== _this._accessToken) {
-                            _this._accessToken = accessToken;
-                            var expiresIn = token.expires_in;
-                            var currentDate = new Date();
-                            var expiresOn = new Date();
-                            expiresOn.setSeconds(currentDate.getSeconds() + expiresIn);
-                            sessionStorage.setItem('tokenExpiresOn', expiresOn.toString());
-                            var seconds = _this._helperService.howLong(expiresOn);
-                            _this._accessTokenValidityLeft.next(seconds);
-                        }
-                    }
+            if (tokenResponse) {
+                var tokenResponseJson = JSON.parse(tokenResponse);
+                if (tokenResponseJson) {
+                    var payloadCheck = _this.parseJwt(tokenResponseJson.access_token);
+                    var timeLeft = payloadCheck['exp'] - Math.floor(Date.now() / 1000);
+                    _this._accessTokenValidityLeft.next(timeLeft);
                 }
                 else {
                     _this._accessTokenValidityLeft.next(0);
                 }
             }
             else {
-                var getDiff = _this._helperService.howLong(new Date(tokenExpiresOn));
-                if (getDiff >= 0) {
-                    _this._accessTokenValidityLeft.next(getDiff);
-                }
+                _this._accessTokenValidityLeft.next(0);
             }
         });
         return this._accessTokenValidityLeft.asObservable();
+    };
+    SmartService.prototype.parseJwt = function (token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(window.atob(base64));
     };
     SmartService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
