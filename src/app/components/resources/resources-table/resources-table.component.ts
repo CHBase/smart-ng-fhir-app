@@ -17,6 +17,11 @@ export class ResourcesTableComponent implements OnInit {
    */
   @Input() resourceType: string;
 
+  /**
+   * Patient-Id of the currently logged-in user.
+   */
+  @Input() patient: string;
+
   constructor() { }
 
   ngOnInit() {

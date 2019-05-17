@@ -28,6 +28,11 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   resources: any;
 
   /**
+   * Store patient-id of the user for misc queries.
+   */
+  patientId: string;
+
+  /**
    * Query object passed to the SMART JS Client Search api.
    */
   query: any;
@@ -105,6 +110,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
     this.query = {
       patient: smartClient.patient.id
     };
+    this.patientId = smartClient.patient.id;
     this._search(smartClient);
   }
 

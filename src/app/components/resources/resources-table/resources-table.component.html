@@ -7,7 +7,7 @@
         <div *ngIf="entry.resource.resourceType !== 'OperationOutcome'">
           <mat-list-item>
             <p mat-line>ID: {{entry.resource.id}} </p>
-            <button mat-raised-button color="primary" routerLink="/resources/{{entry.resource.resourceType}}/{{entry.resource.id}}">View</button>
+            <button *ngIf="patient" mat-raised-button color="primary" routerLink="/resources/{{entry.resource.resourceType}}/{{entry.resource.id}}?patient={{patient}}">View</button>
           </mat-list-item>
         </div>
       </div>
