@@ -35,7 +35,11 @@
         <ace-editor mode="text" [(text)]="queryCode" style="height:100px;" [theme]="'eclipse'"></ace-editor>
         <div class="min-padding">
           <span class="min-padding">
-            <button mat-raised-button color="primary" (click)="applyFilter()" *ngIf="!invalidJson">Apply</button>
+            <input type="date" #startdate name="startdate">
+            <input type="date" #enddate name="enddate">
+          </span>
+          <span class="min-padding">
+            <button mat-raised-button color="primary" (click)="applyFilter(startdate.value, enddate.value)" *ngIf="!invalidJson">Apply</button>
           </span>
           <button mat-raised-button color="warn" (click)="reset()">Reset</button>
         </div>

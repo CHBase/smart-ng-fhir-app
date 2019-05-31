@@ -63,6 +63,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   canCreate: boolean;
 
   private _unsubscribe = new Subject<void>();
+  private readonly _lastUpdatedParam = '_lastUpdated';
 
   constructor(
     private _helperService: HelperService,
@@ -111,14 +112,18 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       patient: smartClient.patient.id
     };
     this.patientId = smartClient.patient.id;
-    this._search(smartClient);
+    this._search(smartClient, null, null);
   }
 
   /**
    * Perform the FHIR API Search call based on the resource type and the query object set via the filter
    * @param smartClient Initialized SMART Client
+   * @param startDate Filter start date
+   * @param endDate Filter end date
    */
-  private _search(smartClient: FHIR.SMART.SMARTClient) {
+  private _search(smartClient: FHIR.SMART.SMARTClient, startDate: string, endDate: string) {
+    let dateParamToUse = this._getDateParamToUse();
+    this._setDateParam(dateParamToUse, startDate, endDate);
     console.log(this.query);
     this.isLoading = true;
     const searchParams: FHIR.SMART.SearchParams = {
@@ -141,13 +146,59 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Utility function to get the supported date param for a resource.
+   */
+  _getDateParamToUse() {
+
+    if (!!this.searchParams)
+    {
+      let dateParam = this._lastUpdatedParam;
+      this.searchParams.forEach(param => {
+        if (param.name.includes("date"))
+        {
+          dateParam = param.name;
+        }
+      });
+      return dateParam;
+    }
+
+    return this._lastUpdatedParam;
+  }
+
+  /**
+   * Utility function to add date filters to the query parameter.
+   * @param paramToUse 
+   * @param startDate 
+   * @param endDate 
+   */
+  _setDateParam(paramToUse: string, startDate: string, endDate: string)
+  {
+    let dateParams = null;
+    if (!!startDate)
+    {
+      if (!dateParams) dateParams = {};
+      dateParams['$ge'] = startDate;
+    }
+    if (!!endDate)
+    {
+      if (!dateParams) dateParams = {};
+      dateParams['$le'] = endDate;
+    }
+
+    if (!!dateParams)
+    {
+      this.query[paramToUse] = dateParams;
+    }
+  }
+
+  /**
    * Called by the Apply button, to apply the query object in the editor and perform the FHIR API Call
    */
-  applyFilter() {
+  applyFilter(startDate: string, endDate: string) {
     this._smartService.getClient()
       .takeUntil(this._unsubscribe)
       .subscribe(smartClient => {
-        this._search(smartClient);
+        this._search(smartClient, startDate, endDate);
       });
   }
 
