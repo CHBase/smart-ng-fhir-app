@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth.service';
 import { HelperService } from '../../../services/helper.service';
 import { SmartService } from '../../../services/smart.service';
 import { Subscription, Subject } from 'rxjs';
+import { MatTabChangeEvent } from '@angular/material';
 
 /**
  * Component which fetches the FHIR resources based on the route parameter FHIR resource type
@@ -41,6 +42,11 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
    * Search Parameters supported by the FHIR Server for this particular FHIR Resource Type
    */
   searchParams: any;
+
+  /**
+   * True, if the user has the specific-date tab selected; false otherwise.
+   */
+  useSpecificDateParam: boolean;
 
   /**
    * Error occured while trying to fetch the resource
@@ -112,7 +118,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       patient: smartClient.patient.id
     };
     this.patientId = smartClient.patient.id;
-    this._search(smartClient, null, null);
+    this._search(smartClient, null, null, null);
   }
 
   /**
@@ -121,9 +127,9 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
    * @param startDate Filter start date
    * @param endDate Filter end date
    */
-  private _search(smartClient: FHIR.SMART.SMARTClient, startDate: string, endDate: string) {
+  private _search(smartClient: FHIR.SMART.SMARTClient, specificDate: string, startDate: string, endDate: string) {
     let dateParamToUse = this._getDateParamToUse();
-    this._setDateParam(dateParamToUse, startDate, endDate);
+    this._setDateParam(dateParamToUse, specificDate, startDate, endDate);
     console.log(this.query);
     this.isLoading = true;
     const searchParams: FHIR.SMART.SearchParams = {
@@ -143,6 +149,15 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
         this.error = error;
       });
     });
+  }
+
+/**
+ * Event handler to detect date parameter type change.
+ * @param event MatTabChangeEvent
+ */
+  OnDateTabChange(event: MatTabChangeEvent){
+    this.useSpecificDateParam = (event.index === 0);
+    // console.log('useSpecificDateParam set to ' + this.useSpecificDateParam);
   }
 
   /**
@@ -168,18 +183,28 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   /**
    * Utility function to add date filters to the query parameter.
    * @param paramToUse 
+   * @param specificDate
    * @param startDate 
    * @param endDate 
    */
-  _setDateParam(paramToUse: string, startDate: string, endDate: string)
+  _setDateParam(paramToUse: string, specificDate:string, startDate: string, endDate: string)
   {
     let dateParams = null;
-    if (!!startDate)
+
+    if (typeof this.useSpecificDateParam === "undefined") this.useSpecificDateParam = true; // Default selected tab is 'specific-date' (0)
+
+    if (this.useSpecificDateParam && !!specificDate)
+    {
+      dateParams = {
+        '$eq' : specificDate
+      };
+    }
+    if (!this.useSpecificDateParam && !!startDate)
     {
       if (!dateParams) dateParams = {};
       dateParams['$ge'] = startDate;
     }
-    if (!!endDate)
+    if (!this.useSpecificDateParam && !!endDate)
     {
       if (!dateParams) dateParams = {};
       dateParams['$le'] = endDate;
@@ -187,6 +212,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
 
     if (!!dateParams)
     {
+      //console.log(dateParams);
       this.query[paramToUse] = dateParams;
     }
   }
@@ -194,11 +220,11 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   /**
    * Called by the Apply button, to apply the query object in the editor and perform the FHIR API Call
    */
-  applyFilter(startDate: string, endDate: string) {
+  applyFilter(specificDate: string, startDate: string, endDate: string) {
     this._smartService.getClient()
       .takeUntil(this._unsubscribe)
       .subscribe(smartClient => {
-        this._search(smartClient, startDate, endDate);
+        this._search(smartClient, specificDate, startDate, endDate);
       });
   }
 
