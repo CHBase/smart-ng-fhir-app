@@ -8,6 +8,9 @@
           <mat-list-item>
             <p mat-line>ID: {{entry.resource.id}} </p>
             <button mat-raised-button color="primary" routerLink="/resources/{{entry.resource.resourceType}}/{{entry.resource.id}}">View</button>
+            <span *ngIf="entry.resource.content && entry.resource.content[0] && entry.resource.content[0].attachment">
+              <button class="resource-table-action-button" mat-raised-button color="primary" (click)="OnDownload(entry)">Download</button>
+            </span>
           </mat-list-item>
         </div>
       </div>
