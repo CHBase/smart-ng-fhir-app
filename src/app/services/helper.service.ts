@@ -100,6 +100,28 @@ export class HelperService {
     const base64 = base64Url.replace('-', '+').replace('_', '/');
     return JSON.parse(window.atob(base64));
   }
+
+  /**
+   * Helper function to check if a target object has any keys from the src object
+   * @param target
+   * @param src 
+   */
+  public hasIntersectingKeys(target: any, src: any): boolean {
+    if (target === {} || src === {})
+    {
+      return false;
+    }
+
+    for(let srcKey in src)
+    {
+      if (target.hasOwnProperty(srcKey))
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
 
 

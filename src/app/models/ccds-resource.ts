@@ -5,16 +5,21 @@ export interface CCDSResourceMapping {
     /**
      * Name of the CCDS datatype.
      */
-    CCDSType: string,
+    CCDSType: string;
     
     /**
      * FHIR Resource this CCDSType maps to.
      */
-    FhirResource: string,
+    FhirResource: string;
 
     /**
      * Additional query parameters needed to filter this resource with.
      */
-    QueryParameters: {}
+    SearchQueryParameters: {};
+
+    /**
+     * If query parameters are not possbile, add filters that need to be applied to resource responses.
+     */
+    SearchSetFilter(singleResourceEntry: any): boolean;
 
 }

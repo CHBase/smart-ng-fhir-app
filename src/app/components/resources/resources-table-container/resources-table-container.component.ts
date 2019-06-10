@@ -5,6 +5,9 @@ import { HelperService } from '../../../services/helper.service';
 import { SmartService } from '../../../services/smart.service';
 import { Subscription, Subject } from 'rxjs';
 import { MatTabChangeEvent } from '@angular/material';
+import { CCDSResourceHelperService } from 'src/app/services/ccds-resource-helper.service';
+import { CCDSResourceMapping } from 'src/app/models/ccds-resource';
+import { environment } from 'src/environments/environment.prod';
 
 /**
  * Component which fetches the FHIR resources based on the route parameter FHIR resource type
@@ -23,6 +26,10 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
    */
   resourceType: string;
 
+  /**
+   * The CCDS resource type mapping for this object
+   */
+  ccdsResourceType: CCDSResourceMapping;
   /**
    * List of resources fetched from the FHIR server based on the query object
    */
@@ -70,7 +77,8 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
     private _helperService: HelperService,
     private _route: ActivatedRoute,
     private _zone: NgZone,
-    private _smartService: SmartService
+    private _smartService: SmartService,
+    private _CCDSResourceHelperService: CCDSResourceHelperService
   ) { }
 
   /**
@@ -80,6 +88,8 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._route.params.subscribe(val => {
       this.resourceType = this._route.snapshot.paramMap.get('resourceType');
+      this.ccdsResourceType = this._CCDSResourceHelperService.getCCDSResourceFromName(this._route.snapshot.fragment);
+      console.log(this.ccdsResourceType);
       this._smartService.getClient()
         .takeUntil(this._unsubscribe)
         .subscribe(smartClient => {
@@ -124,6 +134,15 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   private _search(smartClient: FHIR.SMART.SMARTClient, specificDate: string, startDate: string, endDate: string) {
     let dateParamToUse = this._getDateParamToUse();
     this._setDateParam(dateParamToUse, specificDate, startDate, endDate);
+    if (!!environment.showCCDSResourceMenuInstead)
+    {
+      if (!this._helperService.hasIntersectingKeys(this.query, this.ccdsResourceType.SearchQueryParameters))
+      {
+        // Adding a check for intersecting keys so that a user is able
+        // to modify query parameters that are defined in SearchQueryParameters.
+        this.query = Object.assign(this.query, this.ccdsResourceType.SearchQueryParameters);
+      }
+    }
     console.log(this.query);
     this.isLoading = true;
     const searchParams: FHIR.SMART.SearchParams = {
@@ -135,6 +154,13 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       this._zone.run(() => {
         this.isLoading = false;
         this.resources = response.data;
+        if (!!environment.showCCDSResourceMenuInstead && !!response.data && !!response.data.total)
+        {
+          let responseDataCopy = this._helperService.clone(response.data)
+          // filter the results
+          responseDataCopy.entry = responseDataCopy.entry.filter(this.ccdsResourceType.SearchSetFilter);
+          this.resources = responseDataCopy;
+        }
         this.error = null;
       });
     }, error => {

@@ -4,91 +4,126 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
     {
         CCDSType : "Patient Name",
         FhirResource : "Patient",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Date of Birth",
         FhirResource : "Patient",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Race",
         FhirResource : "Patient",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Ethnicity",
         FhirResource : "Patient",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Preferred language",
         FhirResource : "Patient",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Smoking Status",
-        FhirResource : "Condition",
-        QueryParameters : {}
+        FhirResource : "Observation",
+        SearchQueryParameters : {"code" : "http://loinc.org|72166-2"},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Problems",
         FhirResource : "Condition",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Medications",
         FhirResource : "MedicationStatement",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Medication Allergies",
         FhirResource : "AllergyIntolerance",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : medicationAllergyFilter
     },
     {
         CCDSType : "Lab Tests",
         FhirResource : "DiagnosticReport",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Lab Values/Results",
         FhirResource : "DiagnosticReport",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Vital Signs",
         FhirResource : "Observation",
-        QueryParameters : {}
+        SearchQueryParameters : {
+            "code" : "http://loinc.org|85353-1,http://loinc.org|8867-4,http://loinc.org|8302-2,http://loinc.org|8306-3,http://loinc.org|29463-7,http://loinc.org|85354-9,http://loinc.org|8480-6,http://loinc.org|8462-4"},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Procedures",
         FhirResource : "Procedure",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Care team Members",
         FhirResource : "CareTeam",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Unique Device Identifiers",
         FhirResource : "Device",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Assessment and Plan of Treatment",
         FhirResource : "CarePlan",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Goals",
         FhirResource : "Goal",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     },
     {
         CCDSType : "Health Concerns",
         FhirResource : "Condition",
-        QueryParameters : {}
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
     }
 ]
+
+function defaultFilter(singleResourceEntry: any): boolean {
+     return true;
+    }
+
+function medicationAllergyFilter(singleResourceEntry: any): boolean {
+    if (!singleResourceEntry.resource.extension.some((extension: any) => {
+        return (extension.url.toLowerCase() === "https://fhir.chbase.com/fhir/stu3/structureddefinition/allergy" &&
+            extension.extension[0].url.toLowerCase() === "allergentype" &&
+            extension.extension[0].valueString.toLowerCase() === "med");
+    }))
+    {
+        return false;
+    }
+    return true;
+}

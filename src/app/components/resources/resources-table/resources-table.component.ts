@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-resources-table',
@@ -17,9 +18,16 @@ export class ResourcesTableComponent implements OnInit {
    */
   @Input() resourceType: string;
 
+
+  /**
+   * variable to hold the environment.showCCDSResourceMenuInstead value. 
+   */
+  isCCDSResourceMenuEnabled: boolean
+
   constructor() { }
 
   ngOnInit() {
+    this.isCCDSResourceMenuEnabled = environment.showCCDSResourceMenuInstead;
   }
 
   /**
