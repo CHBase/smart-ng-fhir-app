@@ -1,1 +1,10 @@
-<a *ngFor="let resource of supportedResources" routerLink="/resources/{{resource}}" mat-list-item>{{resource}}</a>
+<ng-container *ngIf="!showCCDSResourceMenuInstead">
+    <a *ngFor="let resource of supportedResources" 
+    routerLink="/resources/{{resource}}" mat-list-item>{{resource}}</a>
+</ng-container>
+
+<ng-container *ngIf="!!showCCDSResourceMenuInstead">
+    <a *ngFor="let ccds of supportedCCDSTypes"
+    [routerLink]="['/resources/', ccds.FhirResource]" 
+    fragment="{{ccds.CCDSType}}" mat-list-item>{{ccds.CCDSType}}</a>
+</ng-container>
