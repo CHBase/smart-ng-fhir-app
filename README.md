@@ -139,7 +139,19 @@ This can be used in any client application making use of the SMART on FHIR Javas
     
     // Calling the SMART JS Client ready method to initialize the SMART Client
     FHIR.oauth2.ready(oauth2ReadyCallback, oauth2ReadyErrback);
-    
+
+## Common Clinical Data Set(CCDS) menu
+
+Update the config `showCCDSResourceMenuInstead` in environment.js and re-build to enable or disable the ccds menu.
+
+This menu uses the mapping defined in `..\src\app\data\ccds-resources.ts` to select the appropriate resource and apply the required filtering.
+
+Two types of filters are available - 
+
+* SearchQueryParameters - Parameters defined here will be appended to the resource table's query filter. Use the fhir.js [search reference](https://github.com/FHIR/fhir.js/blob/master/README.md#search) to see a list of valid keys.
+* SearchSetFilter - Define a filter funtion that will be used to check if a resource entry object should be included in the user's query results.
+
+
 ## Angular CLI GHPages
 https://www.npmjs.com/package/angular-cli-ghpages
 Directly published a live demo into the Github ghpages using ngh
