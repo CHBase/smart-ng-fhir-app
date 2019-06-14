@@ -87,6 +87,12 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
         SearchSetFilter : defaultFilter
     },
     {
+        CCDSType : "Immunizations",
+        FhirResource : "Immunization",
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
+    },
+    {
         CCDSType : "Unique Device Identifiers",
         FhirResource : "Device",
         SearchQueryParameters : {},
