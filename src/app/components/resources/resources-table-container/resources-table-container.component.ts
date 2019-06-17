@@ -290,7 +290,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       .subscribe(conformance => {
         this._zone.run(() => {
           this.canCreate = this._helperService.hasSupport(conformance, smartClient.tokenResponse.scope, this.resourceType, 'create');
-          console.log(this.canCreate);
+          console.log(`this.canCreate : ${this.canCreate}`);
         });
       }, error => {
         this._zone.run(() => {

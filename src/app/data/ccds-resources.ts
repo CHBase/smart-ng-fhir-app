@@ -8,6 +8,11 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
         SearchSetFilter : defaultFilter
     },
     {
+        CCDSType : "Sex",
+        FhirResource : "Patient",
+        SearchQueryParameters : {},
+        SearchSetFilter : defaultFilter
+    },{
         CCDSType : "Date of Birth",
         FhirResource : "Patient",
         SearchQueryParameters : {},
