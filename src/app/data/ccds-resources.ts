@@ -46,7 +46,7 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
         CCDSType : "Problems",
         FhirResource : "Condition",
         SearchQueryParameters : {},
-        SearchSetFilter : defaultFilter
+        SearchSetFilter : problemFilter
     },
     {
         CCDSType : "Medications",
@@ -119,7 +119,7 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
         CCDSType : "Health Concerns",
         FhirResource : "Condition",
         SearchQueryParameters : {},
-        SearchSetFilter : defaultFilter
+        SearchSetFilter : healthConcernFilter
     }
 ]
 
@@ -136,5 +136,50 @@ function medicationAllergyFilter(singleResourceEntry: any): boolean {
     {
         return false;
     }
+    return true;
+}
+
+function problemFilter(singleResourceEntry: any): boolean {
+    // "category": [
+    //     {
+    //       "coding": [
+    //         {
+    //           "system": "http://hl7.org/fhir/condition-clinical",
+    //           "code": "problem",
+    //           "display": "Problem"
+    //         }
+    //       ]
+    //     }
+    //   ],
+    if (!singleResourceEntry.resource.category.some((categoryEntry: any) => {
+        return (categoryEntry.coding[0].system.toLowerCase() === "http://hl7.org/fhir/condition-clinical" &&
+        categoryEntry.coding[0].code.toLowerCase() === "problem" );
+    }))
+    {
+        return false;
+    }   
+    return true;
+}
+
+
+function healthConcernFilter(singleResourceEntry: any): boolean {
+    // "category": [
+    //     {
+    //       "coding": [
+    //         {
+    //           "system": "http://hl7.org/fhir/us/core/CodeSystem/condition-category",
+    //           "code": "health-concern",
+    //           "display": "Health Concern"
+    //         }
+    //       ]
+    //     }
+    //   ],
+    if (!singleResourceEntry.resource.category.some((categoryEntry: any) => {
+        return (categoryEntry.coding[0].system.toLowerCase() === "http://hl7.org/fhir/us/core/codesystem/condition-category" &&
+        categoryEntry.coding[0].code.toLowerCase() === "health-concern" );
+    }))
+    {
+        return false;
+    }   
     return true;
 }
