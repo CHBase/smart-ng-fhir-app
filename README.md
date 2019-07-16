@@ -28,6 +28,10 @@ Run `npm install`
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+### IIS Setup
+
+App can be setup in Windows as an IIS site. Ensure that the site is pointed to the `/dist` folder and that the `URL Rewrite` module has been installed in IIS.
+
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
