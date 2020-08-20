@@ -113,8 +113,9 @@ export class EditResourceComponent implements OnInit, OnDestroy {
    */
   private _setResource(smartClient: FHIR.SMART.SMARTClient) {
     this.isLoading = true;
+    // Have to append patient details as a query param since it breaks otherwise.
     const readParams: FHIR.SMART.ReadParams = {
-      id: this.id,
+      id: this.id + '?patient=' + smartClient.patient.id, 
       type: this.resourceType
     };
     // Makes use of the SMART on FHIR JS Client read api method

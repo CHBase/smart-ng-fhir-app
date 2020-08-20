@@ -34,8 +34,19 @@
         </div>
         <ace-editor mode="text" [(text)]="queryCode" style="height:100px;" [theme]="'eclipse'"></ace-editor>
         <div class="min-padding">
+          <div class="min-padding">
+            <mat-tab-group animationDuration="0ms" [selectedIndex]="0" (selectedTabChange)="OnDateTabChange($event)" >
+              <mat-tab label="Specific-Date">
+                <input type="date" #specificDate name="specificDate">
+              </mat-tab>
+              <mat-tab label="Date-Range">
+                <input type="date" #startdate name="startdate">
+                <input type="date" #enddate name="enddate">
+              </mat-tab>
+            </mat-tab-group>
+          </div>
           <span class="min-padding">
-            <button mat-raised-button color="primary" (click)="applyFilter()" *ngIf="!invalidJson">Apply</button>
+            <button mat-raised-button color="primary" (click)="applyFilter(specificDate.value, startdate.value, enddate.value)" *ngIf="!invalidJson">Apply</button>
           </span>
           <button mat-raised-button color="warn" (click)="reset()">Reset</button>
         </div>

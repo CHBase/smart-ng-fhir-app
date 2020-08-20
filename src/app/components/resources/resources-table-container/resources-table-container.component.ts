@@ -4,6 +4,10 @@ import { AuthService } from '../../../services/auth.service';
 import { HelperService } from '../../../services/helper.service';
 import { SmartService } from '../../../services/smart.service';
 import { Subscription, Subject } from 'rxjs';
+import { MatTabChangeEvent } from '@angular/material';
+import { CCDSResourceHelperService } from 'src/app/services/ccds-resource-helper.service';
+import { CCDSResourceMapping } from 'src/app/models/ccds-resource';
+import { environment } from 'src/environments/environment.prod';
 
 /**
  * Component which fetches the FHIR resources based on the route parameter FHIR resource type
@@ -23,6 +27,10 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   resourceType: string;
 
   /**
+   * The CCDS resource type mapping for this object
+   */
+  ccdsResourceType: CCDSResourceMapping;
+  /**
    * List of resources fetched from the FHIR server based on the query object
    */
   resources: any;
@@ -36,6 +44,11 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
    * Search Parameters supported by the FHIR Server for this particular FHIR Resource Type
    */
   searchParams: any;
+
+  /**
+   * True, if the user has the specific-date tab selected; false otherwise.
+   */
+  useSpecificDateParam: boolean;
 
   /**
    * Error occured while trying to fetch the resource
@@ -58,12 +71,14 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   canCreate: boolean;
 
   private _unsubscribe = new Subject<void>();
+  private readonly _lastUpdatedParam = '_lastUpdated';
 
   constructor(
     private _helperService: HelperService,
     private _route: ActivatedRoute,
     private _zone: NgZone,
-    private _smartService: SmartService
+    private _smartService: SmartService,
+    private _CCDSResourceHelperService: CCDSResourceHelperService
   ) { }
 
   /**
@@ -73,6 +88,8 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._route.params.subscribe(val => {
       this.resourceType = this._route.snapshot.paramMap.get('resourceType');
+      this.ccdsResourceType = this._CCDSResourceHelperService.getCCDSResourceFromName(this._route.snapshot.fragment);
+      console.log(this.ccdsResourceType);
       this._smartService.getClient()
         .takeUntil(this._unsubscribe)
         .subscribe(smartClient => {
@@ -105,14 +122,27 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
     this.query = {
       patient: smartClient.patient.id
     };
-    this._search(smartClient);
+    this._search(smartClient, null, null, null);
   }
 
   /**
    * Perform the FHIR API Search call based on the resource type and the query object set via the filter
    * @param smartClient Initialized SMART Client
+   * @param startDate Filter start date
+   * @param endDate Filter end date
    */
-  private _search(smartClient: FHIR.SMART.SMARTClient) {
+  private _search(smartClient: FHIR.SMART.SMARTClient, specificDate: string, startDate: string, endDate: string) {
+    let dateParamToUse = this._getDateParamToUse();
+    this._setDateParam(dateParamToUse, specificDate, startDate, endDate);
+    if (!!environment.showCCDSResourceMenuInstead)
+    {
+      if (!this._helperService.hasIntersectingKeys(this.query, this.ccdsResourceType.SearchQueryParameters))
+      {
+        // Adding a check for intersecting keys so that a user is able
+        // to modify query parameters that are defined in SearchQueryParameters.
+        this.query = Object.assign(this.query, this.ccdsResourceType.SearchQueryParameters);
+      }
+    }
     console.log(this.query);
     this.isLoading = true;
     const searchParams: FHIR.SMART.SearchParams = {
@@ -124,6 +154,13 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       this._zone.run(() => {
         this.isLoading = false;
         this.resources = response.data;
+        if (!!environment.showCCDSResourceMenuInstead && !!response.data && !!response.data.total)
+        {
+          let responseDataCopy = this._helperService.clone(response.data)
+          // filter the results
+          responseDataCopy.entry = responseDataCopy.entry.filter(this.ccdsResourceType.SearchSetFilter);
+          this.resources = responseDataCopy;
+        }
         this.error = null;
       });
     }, error => {
@@ -134,14 +171,80 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
     });
   }
 
+/**
+ * Event handler to detect date parameter type change.
+ * @param event MatTabChangeEvent
+ */
+  OnDateTabChange(event: MatTabChangeEvent){
+    this.useSpecificDateParam = (event.index === 0);
+    // console.log('useSpecificDateParam set to ' + this.useSpecificDateParam);
+  }
+
+  /**
+   * Utility function to get the supported date param for a resource.
+   */
+  _getDateParamToUse() {
+
+    if (!!this.searchParams)
+    {
+      let dateParam = this._lastUpdatedParam;
+      this.searchParams.forEach(param => {
+        if (param.name.includes("date"))
+        {
+          dateParam = param.name;
+        }
+      });
+      return dateParam;
+    }
+
+    return this._lastUpdatedParam;
+  }
+
+  /**
+   * Utility function to add date filters to the query parameter.
+   * @param paramToUse 
+   * @param specificDate
+   * @param startDate 
+   * @param endDate 
+   */
+  _setDateParam(paramToUse: string, specificDate:string, startDate: string, endDate: string)
+  {
+    let dateParams = null;
+
+    if (typeof this.useSpecificDateParam === "undefined") this.useSpecificDateParam = true; // Default selected tab is 'specific-date' (0)
+
+    if (this.useSpecificDateParam && !!specificDate)
+    {
+      dateParams = {
+        '$eq' : specificDate
+      };
+    }
+    if (!this.useSpecificDateParam && !!startDate)
+    {
+      if (!dateParams) dateParams = {};
+      dateParams['$ge'] = startDate;
+    }
+    if (!this.useSpecificDateParam && !!endDate)
+    {
+      if (!dateParams) dateParams = {};
+      dateParams['$le'] = endDate;
+    }
+
+    if (!!dateParams)
+    {
+      //console.log(dateParams);
+      this.query[paramToUse] = dateParams;
+    }
+  }
+
   /**
    * Called by the Apply button, to apply the query object in the editor and perform the FHIR API Call
    */
-  applyFilter() {
+  applyFilter(specificDate: string, startDate: string, endDate: string) {
     this._smartService.getClient()
       .takeUntil(this._unsubscribe)
       .subscribe(smartClient => {
-        this._search(smartClient);
+        this._search(smartClient, specificDate, startDate, endDate);
       });
   }
 
@@ -187,7 +290,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       .subscribe(conformance => {
         this._zone.run(() => {
           this.canCreate = this._helperService.hasSupport(conformance, smartClient.tokenResponse.scope, this.resourceType, 'create');
-          console.log(this.canCreate);
+          console.log(`this.canCreate : ${this.canCreate}`);
         });
       }, error => {
         this._zone.run(() => {
