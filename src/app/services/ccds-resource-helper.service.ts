@@ -19,9 +19,12 @@ export class CCDSResourceHelperService {
    */
   public getSupportedCCDSResources(supportedResources: any[]){
     return CCDS_RESOURCE_MAPPING.filter((ccdsMapping) => {
+      if (ccdsMapping.FhirResource.startsWith('$')) {
+        return true;
+      }
       return supportedResources.some((resource) => {
         return resource.toLowerCase() === ccdsMapping.FhirResource.toLowerCase();
-      }) 
+      });
     });
   }
 

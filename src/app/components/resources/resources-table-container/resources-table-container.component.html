@@ -52,7 +52,8 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-    <app-resources-table *ngIf="!error" [bundle]="resources" [resourceType]="resourceType"></app-resources-table>
+    <app-resources-table *ngIf="isBundle && !error" [bundle]="resources" [resourceType]="resourceType"></app-resources-table>
   </mat-card-content>
 </mat-card>
+<app-object-viewer *ngIf="!isBundle && !error" [value]="resources"></app-object-viewer>
 <app-object-viewer *ngIf="error" title="Error" [value]="error" hideView="true"></app-object-viewer>

@@ -72,6 +72,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
 
   private _unsubscribe = new Subject<void>();
   private readonly _lastUpdatedParam = '_lastUpdated';
+  private isBundle = true;
 
   constructor(
     private _helperService: HelperService,
@@ -154,6 +155,9 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       this._zone.run(() => {
         this.isLoading = false;
         this.resources = response.data;
+        if(response.data.resourceType !== 'Bundle'){
+          this.isBundle = false;
+        }
         if (!!environment.showCCDSResourceMenuInstead && !!response.data && !!response.data.total)
         {
           let responseDataCopy = this._helperService.clone(response.data)
