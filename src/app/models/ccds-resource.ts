@@ -1,3 +1,5 @@
+import { ResourceSettings } from "./resource-setting";
+
 /**
  * Object to hold mapping between a CCDS datatype and the equivalent FHIR resource
  */
@@ -16,6 +18,11 @@ export interface CCDSResourceMapping {
      * Additional query parameters needed to filter this resource with.
      */
     SearchQueryParameters: {};
+
+    /**
+     * Settings for the CCDS datatype.
+     */
+    ResourceSettings?: ResourceSettings;
 
     /**
      * If query parameters are not possbile, add filters that need to be applied to resource responses.

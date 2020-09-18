@@ -73,6 +73,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   private _unsubscribe = new Subject<void>();
   private readonly _lastUpdatedParam = '_lastUpdated';
   private isBundle = true;
+  private hideDateFilter = false;
 
   constructor(
     private _helperService: HelperService,
@@ -91,6 +92,9 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
       this.resourceType = this._route.snapshot.paramMap.get('resourceType');
       this.ccdsResourceType = this._CCDSResourceHelperService.getCCDSResourceFromName(this._route.snapshot.fragment);
       console.log(this.ccdsResourceType);
+      if (this.ccdsResourceType.ResourceSettings) {
+        this.hideDateFilter = this.ccdsResourceType.ResourceSettings.HideDateFilter;
+      }
       this._smartService.getClient()
         .takeUntil(this._unsubscribe)
         .subscribe(smartClient => {
