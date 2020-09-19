@@ -120,15 +120,6 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
         FhirResource : "Condition",
         SearchQueryParameters : {},
         SearchSetFilter : healthConcernFilter
-    },
-    {
-        CCDSType: "Generate CCDA",
-        FhirResource: "$generate-ccda",
-        SearchQueryParameters: { "start": "01-05-2020", "end": "10-09-2020", "appid": "d04d3191-8923-4fd3-8c25-e671b73c95fb" },
-        SearchSetFilter: defaultFilter,
-        ResourceSettings: {
-            HideDateFilter: true
-        }
     }
 ]
 
