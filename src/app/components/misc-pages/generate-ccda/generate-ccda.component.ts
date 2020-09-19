@@ -104,6 +104,23 @@ export class GenerateCcdaComponent implements OnInit, OnDestroy {
     });
   }
 
+  OnDownload(content) {
+    console.log(content);
+    let attachment = content.attachment;
+    let data = atob(`${attachment.data}`);
+    let blob = new Blob([data], { type: `${attachment.contentType}` });
+    let url = URL.createObjectURL(blob);
+    let filename = GENERATE_CCDA_SETTINGS.DownloadFileName;
+    if (url) {
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
+
   /**
    * Setter method used by the Ace Editor to set the value of the query object
    */
@@ -122,6 +139,13 @@ export class GenerateCcdaComponent implements OnInit, OnDestroy {
    */
   get queryCode() {
     return JSON.stringify(this.query, null, 2);
+  }
+
+  /**
+   * Getter method used by the Ace Editor to get the value of the resources object
+   */
+  get resourcesCode() {
+    return JSON.stringify(this.resources, null, 2);
   }
 
   ngOnDestroy() {
