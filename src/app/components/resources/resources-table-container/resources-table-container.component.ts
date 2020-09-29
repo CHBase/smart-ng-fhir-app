@@ -72,6 +72,7 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
 
   private _unsubscribe = new Subject<void>();
   private readonly _lastUpdatedParam = '_lastUpdated';
+  private note: string;
 
   constructor(
     private _helperService: HelperService,
@@ -156,9 +157,12 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
         this.resources = response.data;
         if (!!environment.showCCDSResourceMenuInstead && !!response.data && !!response.data.total)
         {
-          let responseDataCopy = this._helperService.clone(response.data)
+          let responseDataCopy = this._helperService.clone(response.data);
           // filter the results
-          responseDataCopy.entry = responseDataCopy.entry.filter(this.ccdsResourceType.SearchSetFilter);
+          if (this.ccdsResourceType.SearchSetFilter != null) {
+            this.note = this.ccdsResourceType.SearchSetFilter.FilterNote;
+            responseDataCopy.entry = responseDataCopy.entry.filter(this.ccdsResourceType.SearchSetFilter.Filter);
+          }
           this.resources = responseDataCopy;
         }
         this.error = null;

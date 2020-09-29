@@ -3,7 +3,7 @@
     <mat-list *ngIf="bundle">
       <div>Total Number of resources on the Server:{{bundle.total}}</div>
       <div *ngIf="bundle.entry">Number of resources returned by the Query:{{bundle.entry.length}}</div>
-      <div *ngIf="isCCDSResourceMenuEnabled">The result set has been filtered to show items relevant to the selected CCDS type.</div>
+      <div *ngIf="note">{{note}}</div>
       <div *ngFor="let entry of bundle.entry">
         <div *ngIf="entry.resource.resourceType !== 'OperationOutcome'">
           <mat-list-item>
