@@ -4,12 +4,13 @@ import { ResourceFilter } from '../models/ccds-resource-filter';
 export class ProblemFilter implements ResourceFilter {
     static filterOptions = [
         {
-            System: 'http://hl7.org/fhir/condition-clinical',
-            Code: 'problem',
+            System: 'http://hl7.org/fhir/condition-category',
+            Code: 'problem-list-item',
         },
     ];
 
-    FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.';
+    FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.<br>'
+        + 'Filter used: http://hl7.org/fhir/condition-category|problem-list-item';
 
     Filter(singleResourceEntry: any): boolean {
         let found = false;
@@ -36,7 +37,8 @@ export class HealthConcernFilter implements ResourceFilter {
         },
     ];
 
-    FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.';
+    FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.<br>'
+        + 'Filter used: http://hl7.org/fhir/us/core/codesystem/condition-category|health-concern';
 
     Filter(singleResourceEntry: any): boolean {
         let found = false;
@@ -65,7 +67,8 @@ export class MedicationAllergyFilter implements ResourceFilter {
 
     static urlAllergy = 'https://fhir.chbase.com/fhir/stu3/structureddefinition/allergy';
 
-    FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.';
+    FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.<br>'
+        + 'Filter used: allergentype = "med"';
 
     Filter(singleResourceEntry: any): boolean {
         let found = false;

@@ -226,12 +226,12 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
     if (!this.useSpecificDateParam && !!startDate)
     {
       if (!dateParams) dateParams = {};
-      dateParams['$ge'] = startDate;
+      dateParams['$gt'] = startDate;
     }
     if (!this.useSpecificDateParam && !!endDate)
     {
       if (!dateParams) dateParams = {};
-      dateParams['$le'] = endDate;
+      dateParams['$lt'] = endDate;
     }
 
     if (!!dateParams)
