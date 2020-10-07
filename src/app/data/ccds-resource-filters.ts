@@ -60,6 +60,9 @@ export class HealthConcernFilter implements ResourceFilter {
 export class MedicationAllergyFilter implements ResourceFilter {
     static filterOptions = [
         {
+            Category: 'medication'
+        },
+        {
             Url: 'allergentype',
             Value: 'med'
         },
@@ -68,25 +71,34 @@ export class MedicationAllergyFilter implements ResourceFilter {
     static urlAllergy = 'https://fhir.chbase.com/fhir/stu3/structureddefinition/allergy';
 
     FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.<br>'
-        + 'Filter used: allergentype = "med"';
+        + 'Filter used: category = "medication" or allergentype = "med"';
 
     Filter(singleResourceEntry: any): boolean {
         let found = false;
         MedicationAllergyFilter.filterOptions.forEach(filter => {
-            if (singleResourceEntry.resource.extension.some((extension: any) => {
-                return (
-                    extension.url.toLowerCase() === MedicationAllergyFilter.urlAllergy &&
-                    extension.extension &&
-                    extension.extension.some((ext: any) => {
-                        return (
-                            ext.url.toLowerCase() === filter.Url &&
-                            ext.valueString.toLowerCase() === filter.Value
-                        );
-                    })
-                );
-            })) {
-                found = true;
-                return true;
+            if (filter.Category) {
+                if (singleResourceEntry.resource.category &&
+                    singleResourceEntry.resource.category.includes(filter.Category)) {
+                    found = true;
+                    return;
+                }
+            }
+            if (filter.Url) {
+                if (singleResourceEntry.resource.extension.some((extension: any) => {
+                    return (
+                        extension.url.toLowerCase() === MedicationAllergyFilter.urlAllergy &&
+                        extension.extension &&
+                        extension.extension.some((ext: any) => {
+                            return (
+                                ext.url.toLowerCase() === filter.Url &&
+                                ext.valueString.toLowerCase() === filter.Value
+                            );
+                        })
+                    );
+                })) {
+                    found = true;
+                    return;
+                }
             }
         });
         return found;
