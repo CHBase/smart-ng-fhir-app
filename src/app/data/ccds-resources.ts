@@ -1,5 +1,5 @@
 import { CCDSResourceMapping } from '../models/ccds-resource';
-import { HealthConcernFilter, MedicationAllergyFilter, ProblemFilter } from './ccds-resource-filters';
+import { EncounterDiagnosisFilter, HealthConcernFilter, MedicationAllergyFilter, ProblemFilter } from './ccds-resource-filters';
 
 export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
     {
@@ -67,7 +67,7 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
         CCDSType: 'Vital Signs',
         FhirResource: 'Observation',
         SearchQueryParameters: {
-            'code': 'http://loinc.org|85353-1,http://loinc.org|8867-4,http://loinc.org|8302-2,http://loinc.org|8306-3,http://loinc.org|29463-7,http://loinc.org|85354-9,http://loinc.org|8480-6,http://loinc.org|8462-4'
+            'code': 'http://loinc.org|85353-1,http://loinc.org|8867-4,http://loinc.org|8302-2,http://loinc.org|8306-3,http://loinc.org|29463-7,http://loinc.org|85354-9,http://loinc.org|8480-6,http://loinc.org|8462-4,http://loinc.org|59408-5'
         },
     },
     {
@@ -105,5 +105,11 @@ export const CCDS_RESOURCE_MAPPING: CCDSResourceMapping[] = [
         FhirResource: 'Condition',
         SearchQueryParameters: {},
         SearchSetFilter: new HealthConcernFilter()
+    },
+    {
+        CCDSType: 'Encounter Diagnosis',
+        FhirResource: 'Condition',
+        SearchQueryParameters: {},
+        SearchSetFilter: new EncounterDiagnosisFilter()
     }
 ];

@@ -104,3 +104,31 @@ export class MedicationAllergyFilter implements ResourceFilter {
         return found;
     }
 }
+
+export class EncounterDiagnosisFilter implements ResourceFilter {
+    static filterOptions = [
+        {
+            System: 'http://hl7.org/fhir/condition-category',
+            Code: 'encounter-diagnosis',
+        },
+    ];
+
+    FilterNote = 'The result set has been filtered to show items relevant to the selected CCDS type.<br>'
+        + 'Filter used: http://hl7.org/fhir/condition-category|encounter-diagnosis';
+
+    Filter(singleResourceEntry: any): boolean {
+        let found = false;
+        EncounterDiagnosisFilter.filterOptions.forEach(filter => {
+            if (singleResourceEntry.resource.category.some((categoryEntry: any) => {
+                return (
+                    categoryEntry.coding[0].system.toLowerCase() === filter.System &&
+                    categoryEntry.coding[0].code.toLowerCase() === filter.Code
+                );
+            })) {
+                found = true;
+                return true;
+            }
+        });
+        return found;
+    }
+}
