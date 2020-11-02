@@ -18,11 +18,16 @@ export class ResourcesTableComponent implements OnInit {
    */
   @Input() resourceType: string;
 
+  /**
+   * Note to display
+   */
+  @Input() note: string;
+
 
   /**
    * variable to hold the environment.showCCDSResourceMenuInstead value. 
    */
-  isCCDSResourceMenuEnabled: boolean
+  isCCDSResourceMenuEnabled: boolean;
 
   constructor() { }
 

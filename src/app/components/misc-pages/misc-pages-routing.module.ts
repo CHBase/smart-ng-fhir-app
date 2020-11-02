@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IndexComponent, StateComponent, AccessTokenComponent, UserProfileComponent,
-  ConformanceComponent, ConnectComponent, LaunchComponent, RedirectComponent
+  ConformanceComponent, ConnectComponent, LaunchComponent, RedirectComponent, GenerateCcdaComponent
 } from '.';
 import { AuthGaurd } from '../../misc/auth-guard';
 import { Routes, RouterModule } from '@angular/router';
@@ -16,6 +16,7 @@ const routes: Routes = [
   { path: 'connect/:uniqueName', component: ConnectComponent },
   { path: 'launch/:uniqueName', component: LaunchComponent },
   { path: 'redirect/:uniqueName', component: RedirectComponent },
+  { path: 'generate-ccda', component: GenerateCcdaComponent },
 ];
 
 @NgModule({

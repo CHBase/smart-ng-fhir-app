@@ -1,0 +1,59 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<mat-card class="mat-elevation-z8">
+  <mat-card-title>
+    <div class="row">
+      <div class="col-md-2 col-xs-1">
+        <span style="white-space:nowrap;">Generate-CCDA</span>
+      </div>
+      <div class="col-xs-3 col-md-9">
+      </div>
+    </div>
+  </mat-card-title>
+  <mat-card-content>
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Params
+          </mat-panel-title>
+          <mat-panel-description>
+            Specify the filter as JSON [
+            <a href="https://github.com/FHIR/fhir.js/blob/master/README.md#search">Reference</a>]
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <ace-editor mode="text" [(text)]="queryCode" style="height:100px;" [theme]="'eclipse'"></ace-editor>
+        <div class="min-padding">
+          <span class="min-padding">
+            <button mat-raised-button color="primary" (click)="submit()" *ngIf="!invalidJson">Generate</button>
+          </span>
+          <button mat-raised-button color="warn" (click)="reset()">Reset</button>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <div *ngIf="!error && resources">
+      <mat-tab-group>
+        <mat-tab label="LIST">
+          <mat-list>
+            <div *ngIf="resources.resourceType">Resource type: {{resources.resourceType}}</div>
+            <div *ngIf="resources.id">Id: {{resources.id}}</div>
+            <div *ngIf="resources.meta.lastUpdated">Last updated: {{resources.meta.lastUpdated}}</div>
+            <div *ngIf="resources.content">Number of attachments: {{resources.content.length}}</div>
+            <div *ngFor="let content of resources.content">
+              <mat-list-item>
+                <p mat-line>Attachment title: {{content.attachment.title ? content.attachment.title : 'Untitled'}} </p>
+                <button mat-raised-button color="primary" (click)="OnDownload(content)">Download</button>
+              </mat-list-item>
+            </div>
+          </mat-list>
+        </mat-tab>
+        <mat-tab label="View">
+          <ngx-json-viewer [json]="resources"></ngx-json-viewer>
+        </mat-tab>
+        <mat-tab label="JSON">
+          <ace-editor mode="text" [text]="resourcesCode" style="height:500px;" [theme]="'eclipse'"></ace-editor>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mat-card-content>
+</mat-card>
+<app-object-viewer *ngIf="error" title="Error" [value]="error" hideView="true"></app-object-viewer>
