@@ -24,7 +24,7 @@ export const FHIR_SERVERS: FhirServer[] = [
     {
       uniqueName: 'logica',
       name: 'Logica',
-      baseUrl: 'https://api.logicahealth.org/prsample/open',
+      baseUrl: 'https://api.logicahealth.org/prsample/data',
       information: {
         patientStandalone: [
         ],
