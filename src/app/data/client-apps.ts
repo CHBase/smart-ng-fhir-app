@@ -4,7 +4,7 @@ import { ClientApp } from '../models/client-app';
  */
 export const CLIENT_APPS: ClientApp[] = [
     {
-        name: 'CHBase PPE - Sample Standalone and EHR Launch App',
+        name: 'Local - Sample Standalone and EHR Launch App',
         uniqueName: 'chbaseppe1',
         clientId: '6faa0fe6-8eb2-4217-8c4f-0910f7fed0b5',
         redirectUri: 'http://localhost:4200/redirect/chbaseppe1',
@@ -16,15 +16,15 @@ export const CLIENT_APPS: ClientApp[] = [
         secret: '5e24b756-9a70-4ea7-a602-150c639280a3'
     },
     {
-        name: 'CHBase PPE - Sample App - Live Demo',
+        name: 'Adam - Logica',
         uniqueName: 'sampleappdocs',
-        clientId: '7be9756f-1cb2-4c7c-9b8c-b2acc2325994',
-        redirectUri: 'https://chbase.github.io/smart-ng-fhir-app/redirect/sampleappdocs',
-        launchUrl: 'https://chbase.github.io/smart-ng-fhir-app/launch/sampleappdocs',
+        clientId: 'a0d4ebd4-f817-4eac-92cc-09574ca86ef9',
+        redirectUri: 'https://apbeilchick.github.io/smart-ng-fhir-app/redirect/sampleappdocs',
+        launchUrl: 'https://apbeilchick.github.io/smart-ng-fhir-app/launch/sampleappdocs',
         scopes: 'patient/*.*',
         standalonePatient: true,
         ehrLaunch: true,
         server: 'chbaseppe',
-        secret: 'c55a4f55-c639-4995-8696-d8bbd9c43db7'
+        secret: 'P0Slz__YZE-6gQtTTFgTzheqzPcuUeG1FnyhSlJX4y4NndTI_oAJWakVQj2nelov9OHHeaC0n0V1EElHOpazsg'
     }
 ];
