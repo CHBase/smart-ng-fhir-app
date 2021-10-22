@@ -11,7 +11,7 @@ This is a sample SMART on FHIR application developed using Angular and the SMART
 
 Angular is used only to structure the javascript code into various components and services. FHIR server interactions are done using the [SMART on FHIR Javascript Client library](https://github.com/smart-on-fhir/client-js)
 
-## Live Demo https://chbase.github.io/smart-ng-fhir-app
+## Live Demo https://apbeilchick.github.io/smart-ng-fhir-app
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.7.
 
@@ -160,5 +160,5 @@ Two types of filters are available -
 https://www.npmjs.com/package/angular-cli-ghpages
 Directly published a live demo into the Github ghpages using ngh
 
-    ng build --base-href "https://chbase.github.io/smart-ng-fhir-app/"
+    ng build --base-href="https://apbeilchick.github.io/smart-ng-fhir-app/"
     ngh
