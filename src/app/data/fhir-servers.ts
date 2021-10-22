@@ -20,5 +20,17 @@ export const FHIR_SERVERS: FhirServer[] = [
             ]
         },
         supportsAccessTypes: true
+    },
+    {
+      uniqueName: 'logica',
+      name: 'Logica',
+      baseUrl: 'https://api.logicahealth.org/prsample/open',
+      information: {
+        patientStandalone: [
+        ],
+        ehrLaunch: [
+        ]
+      },
+      supportsAccessTypes: true
     }
 ];

@@ -24,7 +24,7 @@ export const CLIENT_APPS: ClientApp[] = [
         scopes: 'patient/*.*',
         standalonePatient: true,
         ehrLaunch: true,
-        server: 'chbaseppe',
+        server: 'logica',
         secret: 'P0Slz__YZE-6gQtTTFgTzheqzPcuUeG1FnyhSlJX4y4NndTI_oAJWakVQj2nelov9OHHeaC0n0V1EElHOpazsg'
     }
 ];
