@@ -21,7 +21,7 @@ export const CLIENT_APPS: ClientApp[] = [
         clientId: 'a0d4ebd4-f817-4eac-92cc-09574ca86ef9',
         redirectUri: 'https://apbeilchick.github.io/smart-ng-fhir-app/redirect/sampleappdocs',
         launchUrl: 'https://apbeilchick.github.io/smart-ng-fhir-app/launch/sampleappdocs',
-        scopes: 'launch,offline_access,openid,patient/*.*,profile',
+        scopes: 'launch/patient,offline_access,openid,patient/*.*,profile,fhirUser',
         standalonePatient: true,
         ehrLaunch: true,
         server: 'logica'
