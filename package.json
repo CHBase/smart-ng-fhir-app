@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "@types/fhir-js-client": "^1.0.0",
+    "angular-cli-ghpages": "^1.0.0-rc.2",
     "core-js": "^2.5.4",
     "fhir-js-client": "git+https://github.com/nikhil-grh/client-js",
     "hammerjs": "^2.0.8",

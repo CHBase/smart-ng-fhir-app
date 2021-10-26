@@ -33,7 +33,7 @@ export class AuthService {
    */
   login() {
     this.loggedIn.next(true);
-    this._router.navigate(['/resources/Patient']);
+    this._router.navigate(['/resources/dashboard']);
   }
 
   /**

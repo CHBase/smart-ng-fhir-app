@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   EditResourceComponent, PatientComponent,
-  ResourcesTableComponent, ResourcesTableContainerComponent
+  ResourcesTableComponent, ResourcesTableContainerComponent,
+  DashboardComponent, PatientDemographicsComponent
 } from '.';
 import { ResourcesRoutingModule } from './resources-routing.module';
 import { AllMaterialModule } from '../../all-material/all-material.module';
@@ -26,7 +27,9 @@ import { SmartCommonModule } from '../common/smart-common.module';
     EditResourceComponent,
     PatientComponent,
     ResourcesTableComponent,
-    ResourcesTableContainerComponent
+    ResourcesTableContainerComponent,
+    DashboardComponent,
+    PatientDemographicsComponent
   ]
 })
 export class ResourcesModule { }

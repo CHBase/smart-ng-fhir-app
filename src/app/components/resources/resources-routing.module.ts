@@ -6,6 +6,7 @@ import { AuthGaurd } from '../../misc/auth-guard';
 
 const routes: Routes = [
   { path: 'resources/Patient', component: PatientComponent, canActivate: [AuthGaurd] },
+  { path: 'resources/dashboard', component: PatientComponent, canActivate: [AuthGaurd] },
   { path: 'resources/:resourceType', component: ResourcesTableContainerComponent, canActivate: [AuthGaurd] },
   { path: 'resources/:resourceType/:id', component: EditResourceComponent, canActivate: [AuthGaurd] },
 ];
