@@ -39,9 +39,9 @@ export class ConnectComponent implements OnInit, OnDestroy {
           return { value: scope.trim(), checked: true };
         });
         // Add the default scopes requried for a patient standalone launch
-        scopes.push({ value: 'launch/patient', checked: true });
-        scopes.push({ value: 'openid', checked: true });
-        scopes.push({ value: 'profile', checked: true });
+        // scopes.push({ value: 'launch/patient', checked: true });
+        // scopes.push({ value: 'openid', checked: true });
+        // scopes.push({ value: 'profile', checked: true });
         this.scopes = scopes;
         const serverUniqueName = this.app.server;
         this._fhirServerService.getServer(serverUniqueName)
@@ -58,16 +58,16 @@ export class ConnectComponent implements OnInit, OnDestroy {
    * Makes use of the FHIR.oauth.authorize method in SMART JS Client library.
    */
   connect() {
-    let selectedScopes = this.scopes.filter(q => q.checked === true).map(v => v.value).join(' ');
-    if (this.server.supportsAccessTypes === true) {
-      selectedScopes = selectedScopes + ' ' + this.accessType;
-    }
-    if (this.additionalScopes !== '') {
-      selectedScopes = selectedScopes + ' ' + this.additionalScopes;
-    }
+    // let selectedScopes = this.scopes.filter(q => q.checked === true).map(v => v.value).join(' ');
+    // if (this.server.supportsAccessTypes === true) {
+    //   selectedScopes = selectedScopes + ' ' + this.accessType;
+    // }
+    // if (this.additionalScopes !== '') {
+    //   selectedScopes = selectedScopes + ' ' + this.additionalScopes;
+    // }
     const clientSettings: FHIR.SMART.OAuth2ClientSettings = {
       client_id: this.app.clientId,
-      scope: selectedScopes,
+      scope: this.app.scopes,
       redirect_uri: this.app.redirectUri,
       state: this.app.uniqueName,
     };
