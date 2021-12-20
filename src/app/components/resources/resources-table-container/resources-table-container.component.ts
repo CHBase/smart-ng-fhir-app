@@ -88,8 +88,10 @@ export class ResourcesTableContainerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._route.params.subscribe(val => {
       this.resourceType = this._route.snapshot.paramMap.get('resourceType');
-      this.ccdsResourceType = this._CCDSResourceHelperService.getCCDSResourceFromName(this._route.snapshot.fragment);
-      console.log(this.ccdsResourceType);
+      if(!!environment.showCCDSResourceMenuInstead){
+        this.ccdsResourceType = this._CCDSResourceHelperService.getCCDSResourceFromName(this._route.snapshot.fragment);
+        console.log(this.ccdsResourceType);
+      }   
       this._smartService.getClient()
         .takeUntil(this._unsubscribe)
         .subscribe(smartClient => {
