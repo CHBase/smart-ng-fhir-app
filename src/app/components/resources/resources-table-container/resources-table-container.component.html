@@ -26,8 +26,8 @@
           Search Parameters Supported
           <mat-list role="list">
             <mat-list-item role="listitem" *ngFor="let param of searchParams" matTooltip="{{param.documentation}}">
-              <h4 mat-line>{{param.name}}</h4>
-              <p mat-line>{{param.type}}</p>
+              <p mat-line>Param name: {{param.name}}</p>
+              <p mat-line>Param type: {{param.type}}</p>
               <div>{{param.documentation}}</div>
             </mat-list-item>
           </mat-list>
@@ -52,7 +52,7 @@
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-    <app-resources-table *ngIf="!error" [bundle]="resources" [resourceType]="resourceType"></app-resources-table>
+    <app-resources-table *ngIf="!error" [bundle]="resources" [resourceType]="resourceType" [note]="note"></app-resources-table>
   </mat-card-content>
 </mat-card>
 <app-object-viewer *ngIf="error" title="Error" [value]="error" hideView="true"></app-object-viewer>

@@ -6,3 +6,4 @@ export * from './launch/launch.component';
 export * from './redirect/redirect.component';
 export * from './state/state.component';
 export * from './user-profile/user-profile.component';
+export * from './generate-ccda/generate-ccda.component';

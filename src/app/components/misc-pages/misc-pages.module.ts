@@ -14,6 +14,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { SmartCommonModule } from '../common/smart-common.module';
 import { FormsModule } from '@angular/forms';
+import { GenerateCcdaComponent } from './generate-ccda/generate-ccda.component';
 
 /**
  * Modules containing all the components which does not directly make FHIR API Calls except ConformanceComponent
@@ -36,7 +37,8 @@ import { FormsModule } from '@angular/forms';
     LaunchComponent,
     RedirectComponent,
     StateComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    GenerateCcdaComponent
   ]
 })
 export class MiscPagesModule { }
