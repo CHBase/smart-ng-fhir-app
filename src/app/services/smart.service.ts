@@ -141,6 +141,15 @@ export class SmartService {
       'grant_type': 'refresh_token',
       'refresh_token': refresh_token
     };
+
+    const access_token = this.getAccessToken();
+    if (access_token) {
+      const refreshId = this.getClaimValue(access_token, 'refreshId');
+      if (refreshId) {
+        httpOptions.headers = httpHeaders.append('refreshId', refreshId)
+      }
+    }
+
     const bodyParams = Object.keys(params).map((key) => {
       return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
     }).join('&');
@@ -175,6 +184,19 @@ export class SmartService {
       FHIR.oauth2.ready(this.oauth2ReadyCallbackRefreshToken, this.oauth2ReadyErrback);
     } else {
       this._refreshAccessToken(this._smartClient);
+    }
+  }
+
+  /**
+ * Get the access_token from the Token Response, if it exists
+ */
+  getAccessToken() {
+    const tokenResponse = sessionStorage.getItem('tokenResponse');
+    if (tokenResponse) {
+      const token = JSON.parse(tokenResponse);
+      if (token.access_token) {
+        return token.access_token;
+      }
     }
   }
 
@@ -214,6 +236,14 @@ export class SmartService {
       }
     });
     return this._accessTokenValidityLeft.asObservable();
+  }
+
+  getClaimValue(token, claim) {
+    const parsedToken = this.parseJwt(token);
+    if (parsedToken && parsedToken[claim] !== undefined) {
+      return parsedToken[claim];
+    }
+    return null;
   }
 
   parseJwt(token) {
